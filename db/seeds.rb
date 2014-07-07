@@ -1,7 +1,31 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+
+
+
+worlds = [
+  {
+    name: "Genesis",
+    rows: 2,
+    columns: 2,
+    cells: [
+      [0, 0, 'water']
+      [0, 1, 'dirt']
+      [1, 0, 'dirt']
+      [1, 1, 'tree']
+    ]
+  }
+]
+
+worlds.each do |world_hash|
+  world = World.create!(name: world_hash[:name],
+    max_rows: world_hash[:rows],
+    max_columns: world_hash[:columns])
+
+  world_hash[:cells].each do |row, column, terrain_type|
+    terrain = Terrain.where(name: terrain_type).first
+    if terrain.nil?
+      terrain = Terrain.create!(name: terrain_type)
+    end
+
+    Cell.create!(row: row, column: column, terrain: terrain, world: world)
+  end
+end
