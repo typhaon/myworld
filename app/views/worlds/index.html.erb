@@ -1,0 +1,15 @@
+
+<table>
+  <% @cells.each do |row| %>
+    <tr>
+    <% row.each do |cell| %>
+      <td bgcolor=<%=cell.create_terrain(cell.terrain.name)%>>&nbsp; &nbsp;</td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+
+
+
+
+
