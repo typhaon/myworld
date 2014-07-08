@@ -1,0 +1,31 @@
+<h1>Enter New World Criteria</h1>
+
+
+<%= form_for @world do |f| %>
+  <% if @world.errors.any? %>
+    <ul>
+      <% @world.errors.full_messages.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :max_rows %>
+    <%= f.text_field :max_rows %>
+  </div>
+
+  <div>
+    <%= f.label :max_columns %>
+    <%= f.text_field :max_columns %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -4,25 +4,12 @@
 worlds = [
   {
     name: "Genesis",
-    rows: 4,
-    columns: 4,
+    rows: 1,
+    columns: 3,
     cells: [
       [0, 0, 'water'],
-      [0, 1, 'water'],
-      [0, 2, 'dirt'],
-      [0, 3, 'dirt'],
-      [1, 0, 'water'],
-      [1, 1, 'dirt'],
-      [1, 2, 'dirt'],
-      [1, 3, 'tree'],
-      [2, 0, 'water'],
-      [2, 1, 'dirt'],
-      [2, 2, 'tree'],
-      [2, 3, 'tree'],
-      [3, 0, 'water'],
-      [3, 1, 'dirt'],
-      [3, 2, 'dirt'],
-      [3, 3, 'tree'],
+      [0, 1, 'tree'],
+      [0, 2, 'dirt']
     ]
   }
 ]

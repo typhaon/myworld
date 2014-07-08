@@ -5,7 +5,7 @@ class Cell < ActiveRecord::Base
     def create_terrain(terrain_name)
     if terrain_name == 'water'
       tile = 'blue'
-    elsif terrain_name == 'tree'
+    elsif terrain_name == 'trees'
       tile = 'green'
     else
       tile = 'brown'
