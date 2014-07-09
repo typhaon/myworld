@@ -11,51 +11,11 @@ class WorldsController < ApplicationController
   end
 
   def create
-    @world = World.new(world_params)
-    if @world.save
-
-      row = 0
-      column = 0
-      terrain_id = 1
-      world_id = World.last.id
-      max_rows = world_params[:max_rows].to_i
-      max_columns = world_params[:max_columns].to_i
-
-
-      #Create Method?  Where?
-
-      until row == max_rows && column == 0
-        @cell = Cell.create(row: row, column: column, terrain_id: terrain_id, world_id: world_id)
-
-        if Cell.last.terrain_id == 1
-          terrain_id = rand(3)
-        elsif Cell.last.terrain_id == 2
-          terrain_id = rand(3) + 1
-        elsif Cell.last.terrain_id == 3
-          terrain_id = rand(2) + 2
-        end
-
-        if terrain_id == 0
-          terrain_id = 1
-        end
-
-        if column == max_columns - 1
-          row = row + 1
-          column = 0
-        else
-          column = column + 1
-        end
-
-      end
+    @world = WorldBuilder.new(params[:world][:max_rows].to_i, params[:world][:max_columns].to_i)
+    @world.generate!
+    @world.save(params[:world][:name], params[:world][:max_rows].to_i, params[:world][:max_columns].to_i)
     redirect_to worlds_path
-    elsif
-      render :new
-    end
   end
-
-
-
-
 
 
   private

@@ -1,9 +1,11 @@
 
 <table cellspacing="0" cellpadding ="0" margin ="0" border="0">
+
   <% @cells.each do |row| %>
     <tr>
     <% row.each do |cell| %>
-      <td bgcolor=<%=cell.create_terrain(cell.terrain.name)%>> &nbsp;&nbsp;</td>
+
+      <td bgcolor=<%=cell.create_terrain(cell.terrain_id)%>> &nbsp;&nbsp;</td>
     <% end %>
   </tr>
   <% end %>
