@@ -7,8 +7,15 @@ class Cell < ActiveRecord::Base
       tile = 'blue'
     elsif terrain_id == 1
       tile = 'burlywood'
-    else
+    elsif terrain_id == 2
       tile = 'limegreen'
+    elsif terrain_id == 3
+      tile = 'lightslategray'
+    elsif terrain_id == 4
+      tile = 'slategray'
+    elsif terrain_id == 5
+      tile = 'snow'
+    else
     end
     tile
   end

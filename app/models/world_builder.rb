@@ -1,6 +1,6 @@
 class WorldBuilder
 
-  TERRAINS = [1, 2]
+  TERRAINS = [5]
 
   attr_reader :rows, :columns, :cells
 
@@ -23,7 +23,7 @@ class WorldBuilder
   end
 
   def seed_count
-    cell_count / 8
+    cell_count / 2000
   end
 
   def generate!
@@ -38,78 +38,76 @@ class WorldBuilder
       cells[row][col] = TERRAINS.sample
     end
 
-    cells.each_with_index do |row, row_index|
-      row.each_with_index do |cell, cell_index|
-        neighboring_cells = neighbors(cells, row_index, cell_index)
-          if neighboring_cells.count > 4
-            cells[row_index][cell_index] = 1
-          end
+    7.times do
+      cells.reverse.each_with_index do |row, row_index|
+        row.each_with_index do |cell, cell_index|
+          neighboring_cells = neighbors(cells, row_index, cell_index)
+
+            if neighboring_cells.count{|x| x[1]==5} > 0
+              tile = rand(6) + 1
+              if tile > 4
+                cells[row_index][cell_index] = 5
+              else
+                cells[row_index][cell_index] = 4
+              end
+            end
+        end
       end
     end
 
     cells
-    # def save(name)
-    #   world = World.create(name: name)
 
-    #   (0..rows).each do |row|
-    #     (0..columns).each do |column|
-    #       Cell.create(world: world, row: row, column: column, terrain: cells[row][column])
-    #     end
-    #   end
-    # end
-
-    # (0..rows).each do |row|
-    #   (0..columns).each do |column|
-    #     neighboring_cells = neighbors(cells, row, column)
-    #   end
-    # end
   end
 
   def save(name, max_rows, max_cols)
     world = World.create(name: name, max_rows: max_rows, max_columns: max_cols)
 
+    cell_array = []
+
     cells.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
-        Cell.create(world: world, row: row_index, column: cell_index, terrain_id: cell)
+        cell_array << Cell.new(world: world, row: row_index, column: cell_index, terrain_id: cell)
       end
     end
+
+    Cell.import cell_array
   end
 
   def neighbors(cells, row, col)
-    neighboring_cells = []
+    neighboring_cells = Hash.new
     max_col = @columns
     max_row = @rows
 
     if col > 0
-      neighboring_cells << cells[row][col - 1]
+      neighboring_cells['west'] = cells[row][col - 1]
     end
 
     if col < max_col - 1
-      neighboring_cells << cells[row][col + 1]
+      neighboring_cells['east'] = cells[row][col + 1]
     end
 
     if col < max_col - 1 && row < max_row - 1
-      neighboring_cells << cells[row + 1][col + 1]
+      neighboring_cells['south_east'] = cells[row + 1][col + 1]
     end
 
     if col > 0 && row < max_row - 1
-      neighboring_cells << cells[row + 1][col - 1]
+      neighboring_cells['south_west'] = cells[row + 1][col - 1]
     end
 
     if row < max_row - 1
-      neighboring_cells << cells[row + 1][col]
+      neighboring_cells['south'] = cells[row + 1][col]
     end
 
     if row > 0 && col < max_col - 1
-      neighboring_cells << cells[row - 1][col + 1]
+      neighboring_cells['north_east'] = cells[row - 1][col + 1]
     end
 
     if row > 0 && col > 0
-      neighboring_cells << cells[row - 1][col - 1]
+      neighboring_cells['north_west'] = cells[row - 1][col - 1]
     end
 
     if row > 0
-      neighboring_cells << cells[row - 1][col]
+      neighboring_cells['north'] = cells[row - 1][col]
     end
     neighboring_cells
   end
