@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20140707151555) do
     t.string   "name",        null: false
     t.integer  "max_rows",    null: false
     t.integer  "max_columns", null: false
+    t.string   "cells",                    array: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
