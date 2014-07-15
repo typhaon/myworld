@@ -1,6 +1,8 @@
 class WorldBuilder
 
-  TERRAINS = ['rock']
+  TERRAINS = ['grass']
+  TREES = ['tree']
+
 
   attr_reader :rows, :columns, :cells
 
@@ -23,7 +25,11 @@ class WorldBuilder
   end
 
   def seed_count
-    cell_count / 500
+    cell_count / 25
+  end
+
+  def tree_seed_count
+    cell_count / 5
   end
 
   def generate!
@@ -101,110 +107,338 @@ class WorldBuilder
     end
 
 
-
-
-    12.times do
+    3.times do
       cells.each_with_index do |row, row_index|
         row.each_with_index do |cell, cell_index|
           neighboring_cells = neighbors(cells, row_index, cell_index)
 
-          if cells[row_index][cell_index] == 'rock'
-            cells[row_index][cell_index] = 'rock'
-          elsif neighboring_cells.count{|x| x[1]=='rock'} > 6
-            cells[row_index][cell_index] = 'rock'
-          elsif neighboring_cells.count{|x| x[1]=='rock'} >
-            tile = rand(2) + 1
-            if tile == 2
-              if row_index < 80 && row_index > 20
-                cells[row_index][cell_index] = 'grass'
-              else
-                cells[row_index][cell_index] = 'mud'
-              end
-            else
-              cells[row_index][cell_index] = 'dirt'
-            end
-          elsif neighboring_cells.count{|x| x[1]=='rock'} > 0
+          if cells[row_index][cell_index] == 'grass'
             tile = rand(4) + 1
             if tile == 4
-              cells[row_index][cell_index] = 'rock'
-            elsif tile == 3
-              if row_index < 80 && row_index > 20
-                cells[row_index][cell_index] = 'grass'
-              else
-                cells[row_index][cell_index] = 'mud'
+              unless row_index + 1 == rows
+                cells[row_index + 1][cell_index] = 'grass'
               end
-            elsif tile == 2
-              cells[row_index][cell_index] = 'dirt'
-            elsif tile == 1
-              cells[row_index][cell_index] = 'water'
+              unless row_index == 0
+                cells[row_index - 1][cell_index] = 'grass'
+              end
+              unless cell_index + 1 == columns
+                cells[row_index][cell_index + 1] = 'grass'
+              end
+              unless cell_index == 0
+                cells[row_index][cell_index - 1] = 'grass'
+              end
+            elsif tile == 3
+              unless row_index + 1 == rows || cell_index == 0
+                cells[row_index + 1][cell_index - 1] = 'grass'
+              end
+              unless row_index == 0 || cell_index + 1 == columns
+                cells[row_index - 1][cell_index + 1] = 'grass'
+              end
+              unless row_index + 1 == rows || cell_index + 1 == columns
+                cells[row_index + 1][cell_index + 1] = 'grass'
+              end
+              unless row_index == 0 || cell_index == 0
+                cells[row_index - 1][cell_index - 1] = 'grass'
+              end
+            else
+              cells[row_index][cell_index] = 'grass'
             end
+          end
+        end
+      end
+    end
+
+
+    3.times do
+      cells.each_with_index do |row, row_index|
+        row.each_with_index do |cell, cell_index|
+          neighboring_cells = neighbors(cells, row_index, cell_index)
+
+          if neighboring_cells['east'] == 'water' && neighboring_cells['west'] == 'water'
+            if neighboring_cells['south'] == 'water' && neighboring_cells['north'] == 'water'
+              cells[row_index][cell_index] = 'water'
+            else
+            end
+          elsif neighboring_cells.count{|x| x[1] == 'water'} > 6
+            cells[row_index][cell_index] = 'water'
           else
+          end
+
+          if cells[row_index][cell_index] == 'water' && neighboring_cells.count{|x| x[1] == 'grass'} > 6
+            cells[row_index][cell_index] = 'grass'
+          else
+          end
+        end
+      end
+    end
+
+
+
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+        if cells[row_index][cell_index] == 'grass' && neighboring_cells.count{|x| x[1] == 'water'} > 0
+          cells[row_index][cell_index] = 'dirt'
+        else
+        end
+      end
+    end
+
+
+    2.times do
+      cells.each_with_index do |row, row_index|
+        row.each_with_index do |cell, cell_index|
+          neighboring_cells = neighbors(cells, row_index, cell_index)
+
+          if cells[row_index][cell_index] == 'water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 0
+            cells[row_index][cell_index] = 'shallow_water'
+          end
+
+          if cells[row_index][cell_index] == 'water' && neighboring_cells.count{|x| x[1] == 'shallow_water'} > 6
+            cells[row_index][cell_index] = 'shallow_water'
+          end
+
+          if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'water'} > 6
+            cells[row_index][cell_index] = 'shallow_water'
           end
 
         end
       end
     end
 
-      3.times do
-        cells.each_with_index do |row, row_index|
-          row.each_with_index do |cell, cell_index|
-            neighboring_cells = neighbors(cells, row_index, cell_index)
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
 
-            if cells[row_index][cell_index] != 'water' && neighboring_cells.count{|x| x[1]=='water'} > 0
-              if row_index > 80 || row_index < 20
-                cells[row_index][cell_index] = 'ice'
-              else
-                cells[row_index][cell_index] = 'dirt'
+        if cells[row_index][cell_index] == 'dirt' && neighboring_cells.count{|x| x[1] == 'shallow_water'} > 4
+          cells[row_index][cell_index] = 'shallow_water'
+        end
+
+        if cells[row_index][cell_index] == 'grass' && neighboring_cells.count{|x| x[1] == 'shallow_water'} > 0
+          cells[row_index][cell_index] = 'dirt'
+        end
+      end
+    end
+
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 4
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["south_west"] == 'dirt'
+              if neighboring_cells["south"] == 'dirt'
+                if neighboring_cells["south_east"] == 'dirt'
+                  if neighboring_cells["east"] == 'dirt'
+
+                    cells[row_index][cell_index] = 'shallow_water_dirt_south_u'
+                  end
+                end
               end
-            else
             end
           end
         end
-      end
 
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 4
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["south_west"] == 'dirt'
+              if neighboring_cells["south"] == 'dirt'
+                if neighboring_cells["north_west"] == 'dirt'
+                  if neighboring_cells["north"] == 'dirt'
 
-      cells.each_with_index do |row, row_index|
-        row.each_with_index do |cell, cell_index|
-          neighboring_cells = neighbors(cells, row_index, cell_index)
-          far_away_cells = far_away(cells, row_index, cell_index)
-
-          if cells[row_index][cell_index] == 'water'
-            if neighboring_cells.count{|x| x[1] == 'dirt'} > 0 || neighboring_cells.count{|x| x[1] == 'ice'} > 0
-              cells[row_index][cell_index] = 'shallow_water'
-            else
+                    cells[row_index][cell_index] = 'shallow_water_dirt_west_u'
+                  end
+                end
+              end
             end
-          else
           end
-
-          if cells[row_index][cell_index] == 'water' && neighboring_cells.count{|x| x[1] == 'shallow_water'} > 0
-            tile = rand(2)
-            if tile == 1
-              cells[row_index][cell_index] = 'shallow_water'
-            else
-              cells[row_index][cell_index] = 'water'
-            end
-          else
-          end
-
-          if cells[row_index][cell_index] == 'shallow_water' && far_away_cells.count{|x| x[1] == 'shallow_water'} > 0
-              cells[row_index][cell_index] = 'water'
-          else
-          end
-
-
         end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 4
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["north_west"] == 'dirt'
+              if neighboring_cells["north"] == 'dirt'
+                if neighboring_cells["north_east"] == 'dirt'
+                  if neighboring_cells["east"] == 'dirt'
+
+                    cells[row_index][cell_index] = 'shallow_water_dirt_north_u'
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 4
+          if neighboring_cells["north"] == 'dirt'
+            if neighboring_cells["north_east"] == 'dirt'
+              if neighboring_cells["east"] == 'dirt'
+                if neighboring_cells["south_east"] == 'dirt'
+                  if neighboring_cells["south"] == 'dirt'
+
+                    cells[row_index][cell_index] = 'shallow_water_dirt_east_u'
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 2
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["south_west"] == 'dirt'
+              if neighboring_cells["south"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_south_west_L'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 2
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["north_west"] == 'dirt'
+              if neighboring_cells["north"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_north_west_L'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 2
+          if neighboring_cells["east"] == 'dirt'
+            if neighboring_cells["south_east"] == 'dirt'
+              if neighboring_cells["south"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_south_east_L'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} > 2
+          if neighboring_cells["east"] == 'dirt'
+            if neighboring_cells["north_east"] == 'dirt'
+              if neighboring_cells["north"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_north_east_L'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 3
+          if neighboring_cells["south_west"] == 'dirt'
+            if neighboring_cells["south_east"] == 'dirt'
+              if neighboring_cells["south"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_south_shore'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 3
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["north_west"] == 'dirt'
+              if neighboring_cells["south_west"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_west_shore'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 3
+          if neighboring_cells["north_west"] == 'dirt'
+            if neighboring_cells["north_east"] == 'dirt'
+              if neighboring_cells["north"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_north_shore'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 3
+          if neighboring_cells["east"] == 'dirt'
+            if neighboring_cells["north_east"] == 'dirt'
+              if neighboring_cells["south_east"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_east_shore'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 2
+          if neighboring_cells["east"] == 'dirt'
+            if neighboring_cells["north_east"] == 'dirt' || neighboring_cells["south_east"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_east_shore'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 2
+          if neighboring_cells["north"] == 'dirt'
+            if neighboring_cells["north_east"] == 'dirt' || neighboring_cells["north_west"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_north_shore'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 2
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["north_west"] == 'dirt' || neighboring_cells["south_west"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_west_shore'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 2
+          if neighboring_cells["south"] == 'dirt'
+            if neighboring_cells["south_west"] == 'dirt' || neighboring_cells["south_east"] == 'dirt'
+               cells[row_index][cell_index] = 'shallow_water_dirt_south_shore'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 1
+          if neighboring_cells["south_west"] == 'dirt'
+            cells[row_index][cell_index] = 'shallow_water_dirt_sw_corner'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 1
+          if neighboring_cells["north_east"] == 'dirt'
+            cells[row_index][cell_index] = 'shallow_water_dirt_ne_corner'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 1
+          if neighboring_cells["south_east"] == 'dirt'
+            cells[row_index][cell_index] = 'shallow_water_dirt_se_corner'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'shallow_water' && neighboring_cells.count{|x| x[1] == 'dirt'} == 1
+          if neighboring_cells["north_west"] == 'dirt'
+            cells[row_index][cell_index] = 'shallow_water_dirt_nw_corner'
+          end
+        end
+
       end
+    end
 
+    tree_seed_count.times do
+      row = rand(rows)
+      col = rand(columns)
 
-
+      if cells[row][col] == 'grass'
+        cells[row][col] = TREES.sample
+      end
+    end
 
     cells
 
   end
 
-  def save(name, max_rows, max_cols)
+  def save(name, max_rows, max_cols, id)
     cells_array = cells
-    world = World.create(name: name, max_rows: max_rows, max_columns: max_cols, cells: cells_array)
+    world = World.create(name: name, max_rows: max_rows, max_columns: max_cols, cells: cells_array, id: id)
   end
 
 

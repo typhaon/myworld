@@ -24,7 +24,7 @@ $(document).ready(function() {
   var ctx = canvas.getContext('2d');
 
   var img = new Image();
-  img.src = '/assets/terrain.png';
+  img.src = '/assets/testterrain.png';
 
   ctx.canvas.width = window.innerWidth * 0.95;
   ctx.canvas.height = window.innerHeight * 0.95;
@@ -44,37 +44,92 @@ $(document).ready(function() {
   var originX = 0;
   var originY = 0;
 
+  var cellSize = 50;
+
   function draw() {
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     // Draw elements of the game here.
     // Can use `drawRect` and `drawCircle` function.
     // e.g. draw the ball colored green
 
-    var cellSize = 30;
+
 
 
 
     for (var row = 0; row < rowCount; row++) {
       for (var column = 0; column < columnCount; column++) {
-        if (cells[row][column] == "water") {
-          var imageX = 10
-          var imageY = 10
-        } else if (cells[row][column] == "rock") {
-          var imageX = 210
-          var imageY = 10
-        } else if (cells[row][column] == "shallow_water") {
-          var imageX = 60
-          var imageY = 10
-        } else if (cells[row][column] == "grass") {
-          var imageX = 110
-          var imageY = 10
+        if (cells[row][column] == "shallow_water_dirt_west_u") {
+          var imageX = 150
+          var imageY = 100
+        } else if (cells[row][column] == "shallow_water_dirt_east_u") {
+          var imageX = 100
+          var imageY = 100
+        } else if (cells[row][column] == "shallow_water_dirt_north_u") {
+          var imageX = 50
+          var imageY = 100
+        } else if (cells[row][column] == "shallow_water_dirt_south_u") {
+          var imageX = 0
+          var imageY = 100
+        } else if (cells[row][column] == "shallow_water_dirt_south_east") {
+          var imageX = 100
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_south_west_L") {
+          var imageX = 200
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_north_west_L") {
+          var imageX = 250
+          var imageY = 0
+        } else if (cells[row][column] == "shallow_water_dirt_south_east_L") {
+          var imageX = 200
+          var imageY = 0
+        } else if (cells[row][column] == "shallow_water_dirt_north_east_L") {
+          var imageX = 250
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_west_shore") {
+          var imageX = 0
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_east_shore") {
+          var imageX = 0
+          var imageY = 0
+        } else if (cells[row][column] == "shallow_water_dirt_north_shore") {
+          var imageX = 50
+          var imageY = 0
+        } else if (cells[row][column] == "shallow_water_dirt_south_shore") {
+          var imageX = 50
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_sw_corner") {
+          var imageX = 100
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_se_corner") {
+          var imageX = 150
+          var imageY = 50
+        } else if (cells[row][column] == "shallow_water_dirt_nw_corner") {
+          var imageX = 100
+          var imageY = 0
+        } else if (cells[row][column] == "shallow_water_dirt_ne_corner") {
+          var imageX = 150
+          var imageY = 0
+
+
+
+
+
         } else if (cells[row][column] == "dirt") {
-          var imageX = 160
-          var imageY = 10
-        } else if (cells[row][column] == "ice") {
-          var color = 'seashell'
-        } else if (cells[row][column] == "mud") {
-          var color = 'lightgray'
+          var imageX = 200
+          var imageY = 100
+        } else if (cells[row][column] == "shallow_water") {
+          var imageX = 250
+          var imageY = 100
+        } else if (cells[row][column] == "water") {
+          var imageX = 300
+          var imageY = 0
+        } else if (cells[row][column] == "grass") {
+          var imageX = 300
+          var imageY = 50
+        } else if (cells[row][column] == "tree") {
+          var imageX = 0
+          var imageY = 150
+
         } else {
           var color = 'black';
         }
@@ -83,7 +138,7 @@ $(document).ready(function() {
 
 
 
-        ctx.drawImage(img, imageX, imageY, cellSize, cellSize, column * cellSize, row * cellSize, cellSize, cellSize);
+        ctx.drawImage(img, imageX, imageY, cellSize, cellSize, column * cellSize - originX, row * cellSize - originY, cellSize, cellSize);
       }
     }
 
@@ -107,11 +162,23 @@ $(document).ready(function() {
     // e.g. stops the ball from moving when pressing down the space bar
 
     case SPACE_KEY:
-      // do something in here
+
       break;
 
     case DOWN_KEY:
-      camera.moveDown = true;
+      originY += 25;
+      break;
+
+    case UP_KEY:
+      originY += -25;
+      break;
+
+    case LEFT_KEY:
+      originX += -25;
+      break;
+
+    case RIGHT_KEY:
+      originX += 25;
       break;
 
     default:
@@ -137,7 +204,7 @@ $(document).ready(function() {
       break;
 
     case DOWN_KEY:
-      camera.moveDown = false;
+
       break;
 
     default:
