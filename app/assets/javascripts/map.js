@@ -24,7 +24,7 @@ $(document).ready(function() {
   var ctx = canvas.getContext('2d');
 
   var img = new Image();
-  img.src = '/assets/testterrain.png';
+  img.src = '/assets/plain_terrain.png';
 
   ctx.canvas.width = window.innerWidth * 0.95;
   ctx.canvas.height = window.innerHeight * 0.95;
@@ -44,7 +44,7 @@ $(document).ready(function() {
   var originX = 0;
   var originY = 0;
 
-  var cellSize = 50;
+  var cellSize = 32;
 
   function draw() {
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -115,20 +115,41 @@ $(document).ready(function() {
 
 
         } else if (cells[row][column] == "dirt") {
-          var imageX = 200
-          var imageY = 100
+          var imageX = 32
+          var imageY = 0
         } else if (cells[row][column] == "shallow_water") {
-          var imageX = 250
-          var imageY = 100
+          var imageX = 128
+          var imageY = 0
         } else if (cells[row][column] == "water") {
-          var imageX = 300
+          var imageX = 0
           var imageY = 0
         } else if (cells[row][column] == "grass") {
-          var imageX = 300
-          var imageY = 50
+          var imageX = 64
+          var imageY = 0
         } else if (cells[row][column] == "tree") {
           var imageX = 0
           var imageY = 150
+        } else if (cells[row][column] == "mountain") {
+          var imageX = 96
+          var imageY = 0
+        } else if (cells[row][column] == "frozen_water_1") {
+          var imageX = 0
+          var imageY = 32
+        } else if (cells[row][column] == "snow") {
+          var imageX = 0
+          var imageY = 64
+        } else if (cells[row][column] == "snow_mountain_1") {
+          var imageX = 32
+          var imageY = 32
+        } else if (cells[row][column] == "snow_mountain_2") {
+          var imageX = 32
+          var imageY = 64
+        } else if (cells[row][column] == "snow_mountain_3") {
+          var imageX = 64
+          var imageY = 32
+        } else if (cells[row][column] == "snow_mountain_4") {
+          var imageX = 64
+          var imageY = 64
 
         } else {
           var color = 'black';
@@ -166,19 +187,19 @@ $(document).ready(function() {
       break;
 
     case DOWN_KEY:
-      originY += 25;
+      originY += 50;
       break;
 
     case UP_KEY:
-      originY += -25;
+      originY += -50;
       break;
 
     case LEFT_KEY:
-      originX += -25;
+      originX += -50;
       break;
 
     case RIGHT_KEY:
-      originX += 25;
+      originX += 50;
       break;
 
     default:

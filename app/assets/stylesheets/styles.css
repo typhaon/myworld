@@ -6,8 +6,13 @@
 background-color: limegreen;
 }
 
-.rock {
+.mountain {
 background-color: slategray;
+}
+
+
+.snow_mountain {
+background-color: seashell;
 }
 
 .water {
