@@ -32,6 +32,7 @@ group :test, :development do
   gem 'factory_girl_rails'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'activerecord-import'
 end
 
 # Use ActiveModel has_secure_password
