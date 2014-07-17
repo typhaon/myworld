@@ -4,7 +4,7 @@ class CreateWorlds < ActiveRecord::Migration
       t.string :name, null: false
       t.integer :max_rows, null: false
       t.integer :max_columns, null: false
-      t.string :cells, :array => true, default: {'0'}
+      t.string :cells, array: true, default: '{0}'
 
       t.timestamps
     end
