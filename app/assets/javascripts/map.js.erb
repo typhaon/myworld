@@ -24,7 +24,7 @@ $(document).ready(function() {
   var ctx = canvas.getContext('2d');
 
   var img = new Image();
-  img.src = '/assets/plain_terrain.png';
+  img.src = "<%= asset_path('plain_terrain.png') %>";
 
   ctx.canvas.width = window.innerWidth * 0.95;
   ctx.canvas.height = window.innerHeight * 0.95;
