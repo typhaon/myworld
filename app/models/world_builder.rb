@@ -134,7 +134,7 @@ class WorldBuilder
 
       if row > (rows/20) && row < (rows - rows/10)
         if col > (columns/20) && col < (columns - columns/10)
-          if cells[row][col] = 'water'
+          if cells[row][col] == 'water'
             cells[row][col] = GRASS.sample
           end
         end
@@ -520,9 +520,179 @@ class WorldBuilder
           end
         end
 
+        #### Beach Smooth
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["west"] == 'shallow_water'
+            if neighboring_cells["north"] != 'shallow_water'
+              if neighboring_cells["south"] != 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_w'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["east"] == 'shallow_water'
+            if neighboring_cells["north"] != 'shallow_water'
+              if neighboring_cells["south"] != 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_e'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["north"] == 'shallow_water'
+            if neighboring_cells["west"] != 'shallow_water'
+              if neighboring_cells["east"] != 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_n'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["south"] == 'shallow_water'
+            if neighboring_cells["east"] != 'shallow_water'
+              if neighboring_cells["west"] != 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_s'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["north_west"] == 'shallow_water'
+            if neighboring_cells["west"] == 'shallow_water'
+              if neighboring_cells["north"] == 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_nw'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["south_west"] == 'shallow_water'
+            if neighboring_cells["west"] == 'shallow_water'
+              if neighboring_cells["south"] == 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_sw'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["north_east"] == 'shallow_water'
+            if neighboring_cells["east"] == 'shallow_water'
+              if neighboring_cells["north"] == 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_ne'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if neighboring_cells["south_east"] == 'shallow_water'
+            if neighboring_cells["east"] == 'shallow_water'
+              if neighboring_cells["south"] == 'shallow_water'
+                cells[row_index][cell_index] = 'sand_shallow_se'
+              end
+            end
+          end
+        end
+
+        #### Grass/Sand Smooth
+
+        # if cells[row_index][cell_index] == 'grass'
+        #   if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'sand_shallow_e'
+        #     if neighboring_cells["north"] != 'dirt' && neighboring_cells["north"] != 'sand_shallow_n'
+        #       if neighboring_cells["south"] != 'dirt' && neighboring_cells["south"] != 'sand_shallow_s'
+        #         cells[row_index][cell_index] = 'grass_sand_e'
+        #       end
+        #     end
+        #   end
+        # end
+
+        # if cells[row_index][cell_index] == 'grass'
+        #   if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'sand_shallow_e'
+        #     if neighboring_cells["north"] != 'dirt' && neighboring_cells["north"] != 'sand_shallow_n'
+        #       if neighboring_cells["south"] != 'dirt' && neighboring_cells["south"] != 'sand_shallow_s'
+        #         cells[row_index][cell_index] = 'grass_sand_e'
+        #       end
+        #     end
+        #   end
+        # end
+
+        #     # if neighboring_cells["west"] != 'grass' && neighboring_cells["west"] != 'grass_sand_w'
+        #     #   if neighboring_cells["north"] != 'dirt' && neighboring_cells["north"] != 'sand_shallow_n'
+        #     #     if neighboring_cells["south"] != 'dirt' && neighboring_cells["south"] != 'sand_shallow_s'
+        #           cells[row_index][cell_index] = 'grass_sand_w'
+        #         end
+        #   #     end
+        #   #   end
+        #   # end
+        # end
+
+        # if cells[row_index][cell_index] == 'grass'
+        #   if neighboring_cells["south"] == 'shallow_water'
+        #     if neighboring_cells["east"] != 'shallow_water'
+        #       if neighboring_cells["west"] != 'shallow_water'
+        #         cells[row_index][cell_index] = 'sand_shallow_s'
+        #       end
+        #     end
+        #   end
+        # end
+
+        # if cells[row_index][cell_index] == 'grass'
+        #   if neighboring_cells["north_west"] == 'shallow_water'
+        #     if neighboring_cells["west"] == 'shallow_water'
+        #       if neighboring_cells["north"] == 'shallow_water'
+        #         cells[row_index][cell_index] = 'sand_shallow_nw'
+        #       end
+        #     end
+        #   end
+        # end
+
+        # if cells[row_index][cell_index] == 'grass'
+        #   if neighboring_cells["south_west"] == 'shallow_water'
+        #     if neighboring_cells["west"] == 'shallow_water'
+        #       if neighboring_cells["south"] == 'shallow_water'
+        #         cells[row_index][cell_index] = 'sand_shallow_sw'
+        #       end
+        #     end
+        #   end
+        # end
+
+        # if cells[row_index][cell_index] == 'grass'
+        #   if neighboring_cells["north_east"] == 'shallow_water'
+        #     if neighboring_cells["east"] == 'shallow_water'
+        #       if neighboring_cells["north"] == 'shallow_water'
+        #         cells[row_index][cell_index] = 'sand_shallow_ne'
+        #       end
+        #     end
+        #   end
+        # end
 
       end
     end
+
+    cells.each_with_index do |row, row_index|
+
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if cells[row_index][cell_index] == 'grass'
+          if neighboring_cells["west"] == 'sand_shallow_w'
+            cells[row_index][cell_index] = 'grass_sand_w'
+          end
+        end
+
+      end
+    end
+
+
+
 
 
 
