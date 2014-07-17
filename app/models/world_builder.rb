@@ -324,9 +324,9 @@ class WorldBuilder
           end
         end
 
-        if cells[row_index][cell_index] == 'dirt'
-          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-            if neighboring_cells
+        # if cells[row_index][cell_index] == 'dirt'
+        #   if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+        #     if neighboring_cells
 
 
 
