@@ -293,6 +293,7 @@ class WorldBuilder
       row.each_with_index do |cell, cell_index|
         neighboring_cells = neighbors(cells, row_index, cell_index)
 
+        ### Arctic Zones ###
 
         if cells[row_index][cell_index] == 'water'
           if row_index < (0 + rows/10) || row_index > (rows - rows/10)
@@ -324,11 +325,200 @@ class WorldBuilder
           end
         end
 
-        # if cells[row_index][cell_index] == 'dirt'
-        #   if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-        #     if neighboring_cells
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["west"] == 'shallow_water'
+              if neighboring_cells["north"] != 'shallow_water'
+                if neighboring_cells["south"] != 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_w'
+                end
+              end
+            end
+          end
+        end
 
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["east"] == 'shallow_water'
+              if neighboring_cells["north"] != 'shallow_water'
+                if neighboring_cells["south"] != 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_e'
+                end
+              end
+            end
+          end
+        end
 
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["north"] == 'shallow_water'
+              if neighboring_cells["west"] != 'shallow_water'
+                if neighboring_cells["east"] != 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_n'
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["south"] == 'shallow_water'
+              if neighboring_cells["east"] != 'shallow_water'
+                if neighboring_cells["west"] != 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_s'
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["north_west"] == 'shallow_water'
+              if neighboring_cells["west"] == 'shallow_water'
+                if neighboring_cells["north"] == 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_nw'
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["south_west"] == 'shallow_water'
+              if neighboring_cells["west"] == 'shallow_water'
+                if neighboring_cells["south"] == 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_sw'
+                end
+              end
+            end
+          end
+        end
+
+       if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["north_east"] == 'shallow_water'
+              if neighboring_cells["east"] == 'shallow_water'
+                if neighboring_cells["north"] == 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_ne'
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["south_east"] == 'shallow_water'
+              if neighboring_cells["east"] == 'shallow_water'
+                if neighboring_cells["south"] == 'shallow_water'
+                  cells[row_index][cell_index] = 'snow_water_se'
+                end
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'dirt'
+          if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+            if neighboring_cells["south_east"] == 'shallow_water' || neighboring_cells["south_west"] == 'shallow_water' ||
+            neighboring_cells["north_east"] == 'shallow_water' || neighboring_cells["north_west"] == 'shallow_water'
+              if neighboring_cells["east"] != 'shallow_water'
+                if neighboring_cells["south"] != 'shallow_water'
+                  if neighboring_cells["west"] != 'shallow_water'
+                    if neighboring_cells["north"] != 'shallow_water'
+                      cells[row_index][cell_index] = 'snow_water_connect'
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        ########
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["west"] == 'shallow_water'
+            if neighboring_cells["north"] != 'shallow_water'
+              if neighboring_cells["south"] != 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_w'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["east"] == 'shallow_water'
+            if neighboring_cells["north"] != 'shallow_water'
+              if neighboring_cells["south"] != 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_e'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["north"] == 'shallow_water'
+            if neighboring_cells["west"] != 'shallow_water'
+              if neighboring_cells["east"] != 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_n'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["south"] == 'shallow_water'
+            if neighboring_cells["east"] != 'shallow_water'
+              if neighboring_cells["west"] != 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_s'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["north_west"] == 'shallow_water'
+            if neighboring_cells["west"] == 'shallow_water'
+              if neighboring_cells["north"] == 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_nw'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["south_west"] == 'shallow_water'
+            if neighboring_cells["west"] == 'shallow_water'
+              if neighboring_cells["south"] == 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_sw'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["north_east"] == 'shallow_water'
+            if neighboring_cells["east"] == 'shallow_water'
+              if neighboring_cells["north"] == 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_ne'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'water'
+          if neighboring_cells["south_east"] == 'shallow_water'
+            if neighboring_cells["east"] == 'shallow_water'
+              if neighboring_cells["south"] == 'shallow_water'
+                cells[row_index][cell_index] = 'water_shallow_se'
+              end
+            end
+          end
+        end
 
 
       end
