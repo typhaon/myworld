@@ -1,0 +1,44 @@
+.tree {
+
+}
+
+.grass {
+background-color: limegreen;
+}
+
+.mountain {
+background-color: slategray;
+}
+
+
+.snow_mountain {
+background-color: seashell;
+}
+
+.water {
+background-color: royalblue;
+}
+
+.dirt {
+background-color: burlywood;
+}
+
+.ice {
+  background-color: seashell;
+}
+
+.mud {
+  background-color: lightgray;
+}
+
+.shallow_water {
+  background-color: skyblue;
+}
+
+#canvas {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  background: #000000;
+  border: thin inset #aaaaaa;
+}
