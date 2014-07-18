@@ -5,7 +5,8 @@ class WorldBuilder
   TREES = ['tree']
 
 
-  attr_reader :rows, :columns, :cells
+  attr_reader :rows, :columns
+  attr_accessor :cells
 
   def initialize(rows, columns)
     @rows = rows
@@ -37,96 +38,162 @@ class WorldBuilder
     cell_count / 5
   end
 
+  def neighbors(cells, row, col)
+    neighboring_cells = Hash.new
+    max_col = @columns
+    max_row = @rows
+
+    if col > 0
+      neighboring_cells['west'] = cells[row][col - 1]
+    end
+
+    if col < max_col - 1
+      neighboring_cells['east'] = cells[row][col + 1]
+    end
+
+    if col < max_col - 1 && row < max_row - 1
+      neighboring_cells['south_east'] = cells[row + 1][col + 1]
+    end
+
+    if col > 0 && row < max_row - 1
+      neighboring_cells['south_west'] = cells[row + 1][col - 1]
+    end
+
+    if row < max_row - 1
+      neighboring_cells['south'] = cells[row + 1][col]
+    end
+
+    if row > 0 && col < max_col - 1
+      neighboring_cells['north_east'] = cells[row - 1][col + 1]
+    end
+
+    if row > 0 && col > 0
+      neighboring_cells['north_west'] = cells[row - 1][col - 1]
+    end
+
+    if row > 0
+      neighboring_cells['north'] = cells[row - 1][col]
+    end
+    neighboring_cells
+  end
+
+  def basic_neighbors(cells, row, col)
+    basic_neighboring_cells = Hash.new
+    max_col = @columns
+    max_row = @rows
+
+    if row > 0
+      basic_neighboring_cells['north'] = cells[row - 1][col]
+    end
+
+    if col < max_col - 1
+      basic_neighboring_cells['east'] = cells[row][col + 1]
+    end
+
+    if row < max_row - 1
+      basic_neighboring_cells['south'] = cells[row + 1][col]
+    end
+
+    if col > 0
+      basic_neighboring_cells['west'] = cells[row][col - 1]
+    end
+    basic_neighboring_cells
+  end
+
+
+  def far_away(cell, row, col)
+    far_away_cells = Hash.new
+    max_col = @columns
+    max_row = @rows
+
+    if row < max_row - 4
+      far_away_cells['far_south'] = cells[row + 4][col]
+    end
+
+    if col < max_col - 4
+      far_away_cells['far_east'] = cells[row][col + 4]
+    end
+
+    if col > 3
+      far_away_cells['far_west'] = cells[row][col - 4]
+    end
+
+    if row > 3
+      far_away_cells['far_north'] = cells[row - 4][col]
+    end
+    far_away_cells
+  end
+
+#### METHODS HELEN & DAVID MADE FOR REFACTORING
+
+  def make_interior_of_beach_tiles_and_dirt
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+        turn_grass_next_to_water_to_sand(neighboring_cells, row_index, cell_index)
+      end
+    end
+  end
+
+  def turn_grass_next_to_water_to_sand(neighboring_cells, row_index, cell_index)
+    if cells[row_index][cell_index] == 'grass' || cells[row_index][cell_index] == 'seed_grass'
+      if neighboring_cells.count{|x| x[1] == 'sand_shallow_n'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_s'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_w'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_e'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_nw'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_sw'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_se'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      elsif neighboring_cells.count{|x| x[1] == 'sand_shallow_ne'} > 0
+        cells[row_index][cell_index] = 'dirt'
+      end
+    end
+  end
+
+  def is_grass_or_mountain?(cells, row_index, cell_index)
+    ['grass', 'mountain', 'seed_grass'].include?(cells[row_index][cell_index])
+
+    # cells[row_index][cell_index] == 'grass' || cells[row_index][cell_index] == 'mountain' ||
+    #   cells[row_index][cell_index] == 'seed_grass'
+  end
+
+  def change_cell_to_grass_with_southeast_sand(neighboring_cells, cells, row_index, cell_index) #, adjacent_cell)
+    if neighboring_cells["south_east"] == 'dirt' || neighboring_cells["south_east"] == 'sand_shallow_se' || neighboring_cells["south_east"] == 'grass' || neighboring_cells["south_east"] == 'seed_grass'
+      if neighboring_cells["east"] == 'dirt'
+        if neighboring_cells["south"] == 'dirt'
+          cells[row_index][cell_index] = 'grass_sand_se'
+        end
+      end
+    end
+
+    cells[row_index][cell_index]
+  end
+
+  def change_cell_to_grass_with_southwest_sand(neighboring_cells, cells, row_index, cell_index)
+    if neighboring_cells["south_west"] == 'dirt' || neighboring_cells["south_west"] == 'sand_shallow_sw' || neighboring_cells["south_west"] == 'grass' || neighboring_cells["south_west"] == 'seed_grass'
+      if neighboring_cells["west"] == 'dirt'
+        if neighboring_cells["south"] == 'dirt'
+          cells[row_index][cell_index] = 'grass_sand_sw'
+        end
+      end
+    end
+
+    cells[row_index][cell_index]
+  end
+
+#############
+
   def generate!
     # This method should contain the logic for generating the world.
     # The cells variable already contains a grid that is rows * columns
     # large and every cell contains 0.
-
-    def neighbors(cells, row, col)
-      neighboring_cells = Hash.new
-      max_col = @columns
-      max_row = @rows
-
-      if col > 0
-        neighboring_cells['west'] = cells[row][col - 1]
-      end
-
-      if col < max_col - 1
-        neighboring_cells['east'] = cells[row][col + 1]
-      end
-
-      if col < max_col - 1 && row < max_row - 1
-        neighboring_cells['south_east'] = cells[row + 1][col + 1]
-      end
-
-      if col > 0 && row < max_row - 1
-        neighboring_cells['south_west'] = cells[row + 1][col - 1]
-      end
-
-      if row < max_row - 1
-        neighboring_cells['south'] = cells[row + 1][col]
-      end
-
-      if row > 0 && col < max_col - 1
-        neighboring_cells['north_east'] = cells[row - 1][col + 1]
-      end
-
-      if row > 0 && col > 0
-        neighboring_cells['north_west'] = cells[row - 1][col - 1]
-      end
-
-      if row > 0
-        neighboring_cells['north'] = cells[row - 1][col]
-      end
-      neighboring_cells
-    end
-
-    def basic_neighbors(cells, row, col)
-      basic_neighboring_cells = Hash.new
-      max_col = @columns
-      max_row = @rows
-
-      if row > 0
-        basic_neighboring_cells['north'] = cells[row - 1][col]
-      end
-
-      if col < max_col - 1
-        basic_neighboring_cells['east'] = cells[row][col + 1]
-      end
-
-      if row < max_row - 1
-        basic_neighboring_cells['south'] = cells[row + 1][col]
-      end
-
-      if col > 0
-        basic_neighboring_cells['west'] = cells[row][col - 1]
-      end
-      basic_neighboring_cells
-    end
-
-
-    def far_away(cell, row, col)
-      far_away_cells = Hash.new
-      max_col = @columns
-      max_row = @rows
-
-      if row < max_row - 4
-        far_away_cells['far_south'] = cells[row + 4][col]
-      end
-
-      if col < max_col - 4
-        far_away_cells['far_east'] = cells[row][col + 4]
-      end
-
-      if col > 3
-        far_away_cells['far_west'] = cells[row][col - 4]
-      end
-
-      if row > 3
-        far_away_cells['far_north'] = cells[row - 4][col]
-      end
-      far_away_cells
-    end
 
     grass_seed_count.times do
       row = rand(rows)
@@ -520,7 +587,7 @@ class WorldBuilder
           end
         end
 
-        #### Beach Smooth
+        #### Exterior Beach Smoothing
 
         if cells[row_index][cell_index] == 'dirt'
           if neighboring_cells["west"] == 'shallow_water'
@@ -601,100 +668,87 @@ class WorldBuilder
             end
           end
         end
-
-        #### Grass/Sand Smooth
-
-        # if cells[row_index][cell_index] == 'grass'
-        #   if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'sand_shallow_e'
-        #     if neighboring_cells["north"] != 'dirt' && neighboring_cells["north"] != 'sand_shallow_n'
-        #       if neighboring_cells["south"] != 'dirt' && neighboring_cells["south"] != 'sand_shallow_s'
-        #         cells[row_index][cell_index] = 'grass_sand_e'
-        #       end
-        #     end
-        #   end
-        # end
-
-        # if cells[row_index][cell_index] == 'grass'
-        #   if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'sand_shallow_e'
-        #     if neighboring_cells["north"] != 'dirt' && neighboring_cells["north"] != 'sand_shallow_n'
-        #       if neighboring_cells["south"] != 'dirt' && neighboring_cells["south"] != 'sand_shallow_s'
-        #         cells[row_index][cell_index] = 'grass_sand_e'
-        #       end
-        #     end
-        #   end
-        # end
-
-        #     # if neighboring_cells["west"] != 'grass' && neighboring_cells["west"] != 'grass_sand_w'
-        #     #   if neighboring_cells["north"] != 'dirt' && neighboring_cells["north"] != 'sand_shallow_n'
-        #     #     if neighboring_cells["south"] != 'dirt' && neighboring_cells["south"] != 'sand_shallow_s'
-        #           cells[row_index][cell_index] = 'grass_sand_w'
-        #         end
-        #   #     end
-        #   #   end
-        #   # end
-        # end
-
-        # if cells[row_index][cell_index] == 'grass'
-        #   if neighboring_cells["south"] == 'shallow_water'
-        #     if neighboring_cells["east"] != 'shallow_water'
-        #       if neighboring_cells["west"] != 'shallow_water'
-        #         cells[row_index][cell_index] = 'sand_shallow_s'
-        #       end
-        #     end
-        #   end
-        # end
-
-        # if cells[row_index][cell_index] == 'grass'
-        #   if neighboring_cells["north_west"] == 'shallow_water'
-        #     if neighboring_cells["west"] == 'shallow_water'
-        #       if neighboring_cells["north"] == 'shallow_water'
-        #         cells[row_index][cell_index] = 'sand_shallow_nw'
-        #       end
-        #     end
-        #   end
-        # end
-
-        # if cells[row_index][cell_index] == 'grass'
-        #   if neighboring_cells["south_west"] == 'shallow_water'
-        #     if neighboring_cells["west"] == 'shallow_water'
-        #       if neighboring_cells["south"] == 'shallow_water'
-        #         cells[row_index][cell_index] = 'sand_shallow_sw'
-        #       end
-        #     end
-        #   end
-        # end
-
-        # if cells[row_index][cell_index] == 'grass'
-        #   if neighboring_cells["north_east"] == 'shallow_water'
-        #     if neighboring_cells["east"] == 'shallow_water'
-        #       if neighboring_cells["north"] == 'shallow_water'
-        #         cells[row_index][cell_index] = 'sand_shallow_ne'
-        #       end
-        #     end
-        #   end
-        # end
-
       end
     end
 
-    cells.each_with_index do |row, row_index|
+    #### Make Interior of Beach Tiles, Dirt.
 
+
+
+
+    make_interior_of_beach_tiles_and_dirt
+
+###### Angled Sand into Grass
+
+    cells.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
         neighboring_cells = neighbors(cells, row_index, cell_index)
 
-        if cells[row_index][cell_index] == 'grass'
-          if neighboring_cells["west"] == 'sand_shallow_w'
-            cells[row_index][cell_index] = 'grass_sand_w'
+      # if cells[row_index][cell_index] == 'grass' || cells[row_index][cell_index] == 'mountain' || cells[row_index][cell_index] == 'seed_grass'
+        if is_grass_or_mountain?(cells, row_index, cell_index)
+          cells[row_index][cell_index] = change_cell_to_grass_with_southeast_sand(neighboring_cells, cells, row_index, cell_index)
+        # if neighboring_cells["south_east"] == 'dirt' || neighboring_cells["south_east"] == 'sand_shallow_se' || neighboring_cells["south_east"] == 'grass' || neighboring_cells["south_east"] == 'seed_grass'
+        #   if neighboring_cells["east"] == 'dirt'
+        #     if neighboring_cells["south"] == 'dirt'
+        #       cells[row_index][cell_index] = 'grass_sand_se'
+        #     end
+        #   end
+        # end
+
+        cells[row_index][cell_index] = change_cell_to_grass_with_southwest_sand(neighboring_cells, cells, row_index, cell_index)
+
+        # if neighboring_cells["south_west"] == 'dirt' || neighboring_cells["south_west"] == 'sand_shallow_sw' || neighboring_cells["south_west"] == 'grass' || neighboring_cells["south_west"] == 'seed_grass'
+        #   if neighboring_cells["west"] == 'dirt'
+        #     if neighboring_cells["south"] == 'dirt'
+        #       cells[row_index][cell_index] = 'grass_sand_sw'
+        #     end
+        #   end
+        # end
+
+        if neighboring_cells["north_east"] == 'dirt' || neighboring_cells["north_east"] == 'sand_shallow_ne' || neighboring_cells["north_east"] == 'grass' || neighboring_cells["north_east"] == 'seed_grass'
+          if neighboring_cells["east"] == 'dirt'
+            if neighboring_cells["north"] == 'dirt'
+              cells[row_index][cell_index] = 'grass_sand_ne'
+            end
           end
         end
 
+        if neighboring_cells["north_west"] == 'dirt' || neighboring_cells["north_west"] == 'sand_shallow_nw' || neighboring_cells["north_west"] == 'grass' || neighboring_cells["north_west"] == 'seed_grass'
+          if neighboring_cells["west"] == 'dirt'
+            if neighboring_cells["north"] == 'dirt'
+              cells[row_index][cell_index] = 'grass_sand_nw'
+            end
+          end
+        end
       end
     end
 
+      cells.each_with_index do |row, row_index|
+        row.each_with_index do |cell, cell_index|
+          neighboring_cells = neighbors(cells, row_index, cell_index)
+
+          if cells[row_index][cell_index] == 'dirt'
+
+            if neighboring_cells["south"] == 'grass' || neighboring_cells["south"] == 'seed_grass' || neighboring_cells["south"] == 'mountain'
+              if neighboring_cells["west"] == 'dirt'  || neighboring_cells["west"] == 'grass_sand_ne' || neighboring_cells["west"] == 'grass_sand_n'
+                if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'grass_sand_nw' || neighboring_cells["east"] == 'grass_sand_n'
+                  cells[row_index][cell_index] = 'grass_sand_n'
+                end
+              end
+            end
+          end
+        end
+      end
 
 
 
 
+
+
+
+
+
+    end
 
     cells
 
