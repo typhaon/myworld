@@ -67,6 +67,10 @@ $(document).ready(function() {
         } else if (cells[row][column] == "shallow_water") {
           var imageX = 128
           var imageY = 0
+
+        } else if (cells[row][column] == "shallow_2") {
+          var imageX = 0
+          var imageY = 64
         } else if (cells[row][column] == "water") {
           var imageX = 0
           var imageY = 0
@@ -153,6 +157,12 @@ $(document).ready(function() {
         } else if (cells[row][column] == "water_shallow_connect") {
           var imageX = 128
           var imageY = 64
+        } else if (cells[row][column] == "shallow_water_n") {
+          var imageX = 160
+          var imageY = 64
+        } else if (cells[row][column] == "shallow_water_s") {
+          var imageX = 160
+          var imageY = 32
 
         } else if (cells[row][column] == "sand_shallow_w") {
           var imageX = 192
@@ -205,6 +215,9 @@ $(document).ready(function() {
         } else if (cells[row][column] == "grass_sand_nw") {
           var imageX = 352
           var imageY = 160
+        } else if (cells[row][column] == "grass_sand_middle") {
+          var imageX = 96
+          var imageY = 32
 
         } else if (cells[row][column] == "seed_grass") {
           var imageX = 64
