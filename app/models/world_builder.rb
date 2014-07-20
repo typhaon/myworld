@@ -542,22 +542,90 @@ class WorldBuilder
       end
     end
 
+    ##### Beach Trees
 
-    # ###### Make Ring of Shallow_2 around all Shallow
-    # ###### Clean stray?
-    # cells.each_with_index do |row, row_index|
-    #   row.each_with_index do |cell, cell_index|
-    #     neighboring_cells = neighbors(cells, row_index, cell_index)
-    #     basic_neighboring_cells = basic_neighbors(cells, row_index, cell_index)
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
 
-    #     if cells[row_index][cell_index] == 'water'
-    #       if neighboring_cells.count{|x| x[1] == 'shallow_water'} > 0
-    #         cells[row_index][cell_index] = 'shallow_2'
-    #       end
-    #     end
-    #   end
-    # end
+        if cells[row_index][cell_index] == 'dirt'
+          tile = rand(3)
+          if tile == 0
+            cells[row_index][cell_index] = 'dirt_0'
+          end
+        end
 
+        if cells[row_index][cell_index] == 'sand_shallow_nw'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'sand_shallow_nw_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'sand_shallow_ne'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'sand_shallow_ne_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'sand_shallow_w'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'sand_shallow_w_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_e'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_e_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_n'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_n_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_s'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_s_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_se'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_se_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_ne'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_ne_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_nw'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_nw_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_sw'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_sw_0'
+          end
+        end
+
+      end
+    end
 
 
 

@@ -64,6 +64,9 @@ $(document).ready(function() {
         if (cells[row][column] == "dirt") {
           var imageX = 32
           var imageY = 0
+        } else if (cells[row][column] == "dirt_0") {
+          var imageX = 228
+          var imageY = 32
         } else if (cells[row][column] == "shallow_water") {
           var imageX = 128
           var imageY = 0
@@ -167,6 +170,9 @@ $(document).ready(function() {
         } else if (cells[row][column] == "sand_shallow_w") {
           var imageX = 192
           var imageY = 128
+        } else if (cells[row][column] == "sand_shallow_w_0") {
+          var imageX = 192
+          var imageY = 132
         } else if (cells[row][column] == "sand_shallow_e") {
           var imageX = 256
           var imageY = 128
@@ -179,9 +185,15 @@ $(document).ready(function() {
         } else if (cells[row][column] == "sand_shallow_nw") {
           var imageX = 192
           var imageY = 96
+        } else if (cells[row][column] == "sand_shallow_nw_0") {
+          var imageX = 192
+          var imageY = 0
         } else if (cells[row][column] == "sand_shallow_ne") {
           var imageX = 256
           var imageY = 96
+        } else if (cells[row][column] == "sand_shallow_ne_0") {
+          var imageX = 256
+          var imageY = 0
         } else if (cells[row][column] == "sand_shallow_sw") {
           var imageX = 192
           var imageY = 160
@@ -194,27 +206,51 @@ $(document).ready(function() {
         } else if (cells[row][column] == "grass_sand_w") {
           var imageX = 352
           var imageY = 128
+        } else if (cells[row][column] == "grass_sand_w_0") {
+          var imageX = 352
+          var imageY = 32
         } else if (cells[row][column] == "grass_sand_e") {
           var imageX = 288
           var imageY = 128
+        } else if (cells[row][column] == "grass_sand_e_0") {
+          var imageX = 288
+          var imageY = 32
         } else if (cells[row][column] == "grass_sand_n") {
           var imageX = 320
           var imageY = 160
+        } else if (cells[row][column] == "grass_sand_n_0") {
+          var imageX = 320
+          var imageY = 64
         } else if (cells[row][column] == "grass_sand_s") {
           var imageX = 320
           var imageY = 96
+        } else if (cells[row][column] == "grass_sand_s_0") {
+          var imageX = 320
+          var imageY = 0
         } else if (cells[row][column] == "grass_sand_se") {
           var imageX = 288
           var imageY = 96
+        } else if (cells[row][column] == "grass_sand_se_0") {
+          var imageX = 288
+          var imageY = 0
         } else if (cells[row][column] == "grass_sand_sw") {
           var imageX = 352
           var imageY = 96
+        } else if (cells[row][column] == "grass_sand_sw_0") {
+          var imageX = 352
+          var imageY = 0
         } else if (cells[row][column] == "grass_sand_ne") {
           var imageX = 288
           var imageY = 160
+        } else if (cells[row][column] == "grass_sand_ne_0") {
+          var imageX = 288
+          var imageY = 64
         } else if (cells[row][column] == "grass_sand_nw") {
           var imageX = 352
           var imageY = 160
+        } else if (cells[row][column] == "grass_sand_nw_0") {
+          var imageX = 352
+          var imageY = 64
         } else if (cells[row][column] == "grass_sand_middle") {
           var imageX = 96
           var imageY = 32
@@ -222,6 +258,8 @@ $(document).ready(function() {
         } else if (cells[row][column] == "seed_grass") {
           var imageX = 64
           var imageY = 0
+
+
 
         } else {
           var color = 'black';
