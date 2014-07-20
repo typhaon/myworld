@@ -106,20 +106,11 @@ class WorldBuilder
     max_col = @columns
     max_row = @rows
 
-    if row < max_row - 4
-      far_away_cells['far_south'] = cells[row + 4][col]
-    end
-
-    if col < max_col - 4
-      far_away_cells['far_east'] = cells[row][col + 4]
-    end
-
-    if col > 3
-      far_away_cells['far_west'] = cells[row][col - 4]
-    end
-
-    if row > 3
-      far_away_cells['far_north'] = cells[row - 4][col]
+    if row < max_row - 4 && col < max_col - 4
+      far_away_cells['south_west_corner'] = cells[row + 3][col]
+      far_away_cells['north_east_corner'] = cells[row][col + 3]
+      far_away_cells['south_east_corner'] = cells[row + 3][col + 3]
+      far_away_cells['origin'] = cells[row][col]
     end
     far_away_cells
   end
@@ -546,6 +537,7 @@ class WorldBuilder
 
     cells.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
+        far_away_cells = far_away(cells, row_index, cell_index)
 
         if cells[row_index][cell_index] == 'dirt'
           tile = rand(3)
@@ -623,6 +615,48 @@ class WorldBuilder
             cells[row_index][cell_index] = 'grass_sand_sw_0'
           end
         end
+
+        if cells[row_index][cell_index] == 'grass'
+          if far_away_cells.count{|x| x[1] == 'grass'} == 4
+            tile = rand(500)
+            if tile == 0
+              cells[row_index][cell_index] = 'house_1'
+              cells[row_index][cell_index + 1] = 'house_2'
+              cells[row_index][cell_index + 2] = 'house_3'
+              cells[row_index][cell_index + 3] = 'house_4'
+              cells[row_index + 1][cell_index] = 'house_5'
+              cells[row_index + 1][cell_index + 1] = 'house_6'
+              cells[row_index + 1][cell_index + 2] = 'house_7'
+              cells[row_index + 1][cell_index + 3] = 'house_8'
+              cells[row_index + 2][cell_index] = 'house_9'
+              cells[row_index + 2][cell_index + 1] = 'house_10'
+              cells[row_index + 2][cell_index + 2] = 'house_11'
+              cells[row_index + 2][cell_index + 3] = 'house_12'
+              cells[row_index + 3][cell_index] = 'house_13'
+              cells[row_index + 3][cell_index + 1] = 'house_14'
+              cells[row_index + 3][cell_index + 2] = 'house_15'
+              cells[row_index + 3][cell_index + 3] = 'house_16'
+            end
+
+            if tile == 1
+              cells[row_index][cell_index + 1] = 'ruin_1'
+              cells[row_index][cell_index + 2] = 'ruin_2'
+              cells[row_index + 1][cell_index + 1] = 'ruin_3'
+              cells[row_index + 1][cell_index + 2] = 'ruin_4'
+            end
+
+          end
+
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_tree_0'
+          end
+          if tile == 1
+            cells[row_index][cell_index] = 'grass_tree_1'
+          end
+        end
+
+
 
       end
     end
