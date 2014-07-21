@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: "worlds#index"
+  root to: "worlds#new"
 
   resources :worlds
 end

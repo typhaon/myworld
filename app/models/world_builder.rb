@@ -115,7 +115,12 @@ class WorldBuilder
     far_away_cells
   end
 
-#### METHODS HELEN & DAVID MADE FOR REFACTORING
+  def save(name, max_rows, max_cols, id)
+    cells_array = cells
+    world = World.create(name: name, max_rows: max_rows, max_columns: max_cols, cells: cells_array, id: id)
+  end
+
+  #### METHODS HELEN & DAVID MADE FOR REFACTORING
 
   def make_interior_of_beach_tiles_and_dirt
     cells.each_with_index do |row, row_index|
@@ -335,27 +340,17 @@ class WorldBuilder
     end
 
     ###### Make Ring of Shallow around all Dirt
-    ###### Clean stray Mountains
     ###### Convert all Seed_Grass to Grass
     cells.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
         neighboring_cells = neighbors(cells, row_index, cell_index)
-        basic_neighboring_cells = basic_neighbors(cells, row_index, cell_index)
-
-        if cells[row_index][cell_index] == 'water'
-          if neighboring_cells.count{|x| x[1] == 'dirt'} > 0
-            cells[row_index][cell_index] = 'shallow_water'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'mountain'
-          if basic_neighboring_cells.count{|x| x[1] == 'mountain'} < 2
-            cells[row_index][cell_index] = 'grass'
-          end
-        end
 
         if cells[row_index][cell_index] == 'seed_grass'
           cells[row_index][cell_index] = 'grass'
+        elsif cells[row_index][cell_index] == 'water'
+          if neighboring_cells.count{|x| x[1] == 'dirt'} > 0
+            cells[row_index][cell_index] = 'shallow_water'
+          end
         end
       end
     end
@@ -439,383 +434,13 @@ class WorldBuilder
       end
     end
 
-    #### Make Interior of Beach Tiles, Dirt.
-    make_interior_of_beach_tiles_and_dirt
-
-    ###### Angled Sand into Grass
-
+    ######## Deep/Shallow Water Smoothing
     cells.each_with_index do |row, row_index|
-      row.each_with_index do |cell, cell_index|
-        neighboring_cells = neighbors(cells, row_index, cell_index)
-
-        if is_grass_or_mountain?(cells, row_index, cell_index)
-
-          cells[row_index][cell_index] = change_cell_to_grass_with_southeast_sand(neighboring_cells, cells, row_index, cell_index)
-
-          cells[row_index][cell_index] = change_cell_to_grass_with_southwest_sand(neighboring_cells, cells, row_index, cell_index)
-
-          cells[row_index][cell_index] = change_cell_to_grass_with_northeast_sand(neighboring_cells, cells, row_index, cell_index)
-
-          cells[row_index][cell_index] = change_cell_to_grass_with_northwest_sand(neighboring_cells, cells, row_index, cell_index)
-        end
-      end
-    end
-
-    ###### Smooth Remaining Sand
-
-    cells.each_with_index do |row, row_index|
-      row.each_with_index do |cell, cell_index|
-        neighboring_cells = neighbors(cells, row_index, cell_index)
-
-        if cells[row_index][cell_index] == 'dirt'
-
-          if neighboring_cells.count{|x| x[1] == 'grass'} > 7
-            cells[row_index][cell_index] = 'grass_sand_middle'
-          end
-
-          if neighboring_cells["south"] == 'grass' || neighboring_cells["south"] == 'mountain'
-            if neighboring_cells["west"] == 'dirt'  || neighboring_cells["west"] == 'grass_sand_ne' || neighboring_cells["west"] == 'grass_sand_n'
-              if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'grass_sand_nw' || neighboring_cells["east"] == 'grass_sand_n'
-                cells[row_index][cell_index] = 'grass_sand_n'
-              end
-            end
-          end
-
-          if neighboring_cells["north"] == 'grass' || neighboring_cells["north"] == 'mountain'
-            if neighboring_cells["west"] == 'dirt'  || neighboring_cells["west"] == 'grass_sand_se' || neighboring_cells["west"] == 'grass_sand_s'
-              if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'grass_sand_sw' || neighboring_cells["east"] == 'grass_sand_s'
-                cells[row_index][cell_index] = 'grass_sand_s'
-              end
-            end
-          end
-
-          if neighboring_cells["west"] == 'grass' || neighboring_cells["west"] == 'mountain'
-            if neighboring_cells["north"] == 'dirt'  || neighboring_cells["north"] == 'grass_sand_se' || neighboring_cells["north"] == 'grass_sand_e'
-              if neighboring_cells["south"] == 'dirt' || neighboring_cells["south"] == 'grass_sand_ne' || neighboring_cells["south"] == 'grass_sand_e'
-                cells[row_index][cell_index] = 'grass_sand_e'
-              end
-            end
-          end
-
-          if neighboring_cells["east"] == 'grass' || neighboring_cells["east"] == 'seed_grass' || neighboring_cells["east"] == 'mountain'
-            if neighboring_cells["north"] == 'dirt'  || neighboring_cells["north"] == 'grass_sand_sw' || neighboring_cells["north"] == 'grass_sand_w'
-              if neighboring_cells["south"] == 'dirt' || neighboring_cells["south"] == 'grass_sand_nw' || neighboring_cells["south"] == 'grass_sand_w'
-                cells[row_index][cell_index] = 'grass_sand_w'
-              end
-            end
-          end
-
-          if neighboring_cells["north"] == 'grass' || neighboring_cells ["north"] == 'mountain'
-            if neighboring_cells["east"] == 'grass' || neighboring_cells ["east"] == 'mountain'
-              cells[row_index][cell_index] = 'grass_sand_sw'
-            end
-          end
-
-          if neighboring_cells["south"] == 'grass' || neighboring_cells ["south"] == 'mountain'
-            if neighboring_cells["east"] == 'grass' || neighboring_cells ["east"] == 'mountain'
-              cells[row_index][cell_index] = 'grass_sand_nw'
-            end
-          end
-
-          if neighboring_cells["south"] == 'grass' || neighboring_cells ["south"] == 'mountain'
-              if neighboring_cells["west"] == 'grass' || neighboring_cells ["west"] == 'mountain'
-                cells[row_index][cell_index] = 'grass_sand_ne'
-              end
-          end
-
-          if neighboring_cells["north"] == 'grass' || neighboring_cells ["north"] == 'mountain'
-              if neighboring_cells["west"] == 'grass' || neighboring_cells ["west"] == 'mountain'
-                cells[row_index][cell_index] = 'grass_sand_se'
-              end
-          end
-
-        end
-      end
-    end
-
-    ##### Beach Trees
-
-    cells.each_with_index do |row, row_index|
-      row.each_with_index do |cell, cell_index|
-        far_away_cells = far_away(cells, row_index, cell_index)
-
-        if cells[row_index][cell_index] == 'dirt'
-          tile = rand(3)
-          if tile == 0
-            cells[row_index][cell_index] = 'dirt_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'sand_shallow_nw'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'sand_shallow_nw_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'sand_shallow_ne'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'sand_shallow_ne_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'sand_shallow_w'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'sand_shallow_w_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_e'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_e_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_n'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_n_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_s'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_s_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_se'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_se_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_ne'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_ne_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_nw'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_nw_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass_sand_sw'
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_sand_sw_0'
-          end
-        end
-
-        if cells[row_index][cell_index] == 'grass'
-          if far_away_cells.count{|x| x[1] == 'grass'} == 4
-            tile = rand(500)
-            if tile == 0
-              cells[row_index][cell_index] = 'house_1'
-              cells[row_index][cell_index + 1] = 'house_2'
-              cells[row_index][cell_index + 2] = 'house_3'
-              cells[row_index][cell_index + 3] = 'house_4'
-              cells[row_index + 1][cell_index] = 'house_5'
-              cells[row_index + 1][cell_index + 1] = 'house_6'
-              cells[row_index + 1][cell_index + 2] = 'house_7'
-              cells[row_index + 1][cell_index + 3] = 'house_8'
-              cells[row_index + 2][cell_index] = 'house_9'
-              cells[row_index + 2][cell_index + 1] = 'house_10'
-              cells[row_index + 2][cell_index + 2] = 'house_11'
-              cells[row_index + 2][cell_index + 3] = 'house_12'
-              cells[row_index + 3][cell_index] = 'house_13'
-              cells[row_index + 3][cell_index + 1] = 'house_14'
-              cells[row_index + 3][cell_index + 2] = 'house_15'
-              cells[row_index + 3][cell_index + 3] = 'house_16'
-            end
-
-            if tile == 1
-              cells[row_index][cell_index + 1] = 'ruin_1'
-              cells[row_index][cell_index + 2] = 'ruin_2'
-              cells[row_index + 1][cell_index + 1] = 'ruin_3'
-              cells[row_index + 1][cell_index + 2] = 'ruin_4'
-            end
-
-          end
-
-          tile = rand(4)
-          if tile == 0
-            cells[row_index][cell_index] = 'grass_tree_0'
-          end
-          if tile == 1
-            cells[row_index][cell_index] = 'grass_tree_1'
-          end
-        end
-
-
-
-      end
-    end
-
-
-
-    #     ### Arctic Zones ###
-
-    #     if cells[row_index][cell_index] == 'water'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         tile = rand(10)
-    #         if tile == 1
-    #           cells[row_index][cell_index] = 'frozen_water_1'
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'grass'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #           cells[row_index][cell_index] = 'snow'
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'mountain'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         tile = rand(4) + 1
-    #           if tile == 1
-    #             cells[row_index][cell_index] = 'snow_mountain_1'
-    #           elsif tile == 2
-    #             cells[row_index][cell_index] = 'snow_mountain_2'
-    #           elsif tile == 3
-    #             cells[row_index][cell_index] = 'snow_mountain_3'
-    #           elsif tile == 4
-    #             cells[row_index][cell_index] = 'snow_mountain_4'
-    #           end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["west"] == 'shallow_water'
-    #           if neighboring_cells["north"] != 'shallow_water'
-    #             if neighboring_cells["south"] != 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_w'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["east"] == 'shallow_water'
-    #           if neighboring_cells["north"] != 'shallow_water'
-    #             if neighboring_cells["south"] != 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_e'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["north"] == 'shallow_water'
-    #           if neighboring_cells["west"] != 'shallow_water'
-    #             if neighboring_cells["east"] != 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_n'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["south"] == 'shallow_water'
-    #           if neighboring_cells["east"] != 'shallow_water'
-    #             if neighboring_cells["west"] != 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_s'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["north_west"] == 'shallow_water'
-    #           if neighboring_cells["west"] == 'shallow_water'
-    #             if neighboring_cells["north"] == 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_nw'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["south_west"] == 'shallow_water'
-    #           if neighboring_cells["west"] == 'shallow_water'
-    #             if neighboring_cells["south"] == 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_sw'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #    if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["north_east"] == 'shallow_water'
-    #           if neighboring_cells["east"] == 'shallow_water'
-    #             if neighboring_cells["north"] == 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_ne'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["south_east"] == 'shallow_water'
-    #           if neighboring_cells["east"] == 'shallow_water'
-    #             if neighboring_cells["south"] == 'shallow_water'
-    #               cells[row_index][cell_index] = 'snow_water_se'
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    #     if cells[row_index][cell_index] == 'dirt'
-    #       if row_index < (0 + rows/10) || row_index > (rows - rows/10)
-    #         if neighboring_cells["south_east"] == 'shallow_water' || neighboring_cells["south_west"] == 'shallow_water' ||
-    #         neighboring_cells["north_east"] == 'shallow_water' || neighboring_cells["north_west"] == 'shallow_water'
-    #           if neighboring_cells["east"] != 'shallow_water'
-    #             if neighboring_cells["south"] != 'shallow_water'
-    #               if neighboring_cells["west"] != 'shallow_water'
-    #                 if neighboring_cells["north"] != 'shallow_water'
-    #                   cells[row_index][cell_index] = 'snow_water_connect'
-    #                 end
-    #               end
-    #             end
-    #           end
-    #         end
-    #       end
-    #     end
-
-    # ######## Deep/Shallow Water Smoothing
-
-
-   cells.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
         neighboring_cells = neighbors(cells, row_index, cell_index)
 
         if cells[row_index][cell_index] == 'water'
+
           if neighboring_cells["west"] == 'shallow_water'
             if neighboring_cells["east"] == 'shallow_water'
               if neighboring_cells["south"] == 'shallow_water'
@@ -896,38 +521,453 @@ class WorldBuilder
               end
             end
           end
+
         end
       end
     end
 
+    #### Make Interior of Beach Tiles, Dirt.
+    make_interior_of_beach_tiles_and_dirt
+
+    ##### Mountain Cleanup
+    2.times do
+      cells.each_with_index do |row, row_index|
+        row.each_with_index do |cell, cell_index|
+          neighboring_cells = neighbors(cells, row_index, cell_index)
+          basic_neighboring_cells = basic_neighbors(cells, row_index, cell_index)
+
+          if cells[row_index][cell_index] == 'mountain'
+            if basic_neighboring_cells.count{|x| x[1] == 'mountain'} < 2
+              cells[row_index][cell_index] = 'grass'
+            end
+          end
+
+          if cells[row_index][cell_index] == 'mountain'
+            if neighboring_cells.count{|x| x[1] == 'mountain'} + neighboring_cells.count{|x| x[1] == 'grass'} < 8
+              cells[row_index][cell_index] = 'grass'
+            end
+          end
+
+          if cells[row_index][cell_index] == 'grass'
+            if neighboring_cells.count{|x| x[1] == 'mountain'} > 6
+              cells[row_index][cell_index] = 'mountain'
+            end
+          end
+
+          if cells[row_index][cell_index] == 'mountain'
+            if neighboring_cells.count{|x| x[1] == 'grass'} > 5
+              cells[row_index][cell_index] = 'grass'
+            end
+          end
+        end
+      end
+    end
+
+    #####Angled Sand into Grass
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if is_grass_or_mountain?(cells, row_index, cell_index)
+
+          cells[row_index][cell_index] = change_cell_to_grass_with_southeast_sand(neighboring_cells, cells, row_index, cell_index)
+
+          cells[row_index][cell_index] = change_cell_to_grass_with_southwest_sand(neighboring_cells, cells, row_index, cell_index)
+
+          cells[row_index][cell_index] = change_cell_to_grass_with_northeast_sand(neighboring_cells, cells, row_index, cell_index)
+
+          cells[row_index][cell_index] = change_cell_to_grass_with_northwest_sand(neighboring_cells, cells, row_index, cell_index)
+        end
+      end
+    end
+
+    ###### Smooth Remaining Sand
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if cells[row_index][cell_index] == 'dirt'
+
+          if neighboring_cells.count{|x| x[1] == 'grass'} > 7
+            cells[row_index][cell_index] = 'grass_sand_middle'
+          end
+
+          if neighboring_cells["south"] == 'grass' || neighboring_cells["south"] == 'mountain'
+            if neighboring_cells["west"] == 'dirt'  || neighboring_cells["west"] == 'grass_sand_ne' || neighboring_cells["west"] == 'grass_sand_n'
+              if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'grass_sand_nw' || neighboring_cells["east"] == 'grass_sand_n'
+                cells[row_index][cell_index] = 'grass_sand_n'
+              end
+            end
+          end
+
+          if neighboring_cells["north"] == 'grass' || neighboring_cells["north"] == 'mountain'
+            if neighboring_cells["west"] == 'dirt'  || neighboring_cells["west"] == 'grass_sand_se' || neighboring_cells["west"] == 'grass_sand_s'
+              if neighboring_cells["east"] == 'dirt' || neighboring_cells["east"] == 'grass_sand_sw' || neighboring_cells["east"] == 'grass_sand_s'
+                cells[row_index][cell_index] = 'grass_sand_s'
+              end
+            end
+          end
+
+          if neighboring_cells["west"] == 'grass' || neighboring_cells["west"] == 'mountain'
+            if neighboring_cells["north"] == 'dirt'  || neighboring_cells["north"] == 'grass_sand_se' || neighboring_cells["north"] == 'grass_sand_e'
+              if neighboring_cells["south"] == 'dirt' || neighboring_cells["south"] == 'grass_sand_ne' || neighboring_cells["south"] == 'grass_sand_e'
+                cells[row_index][cell_index] = 'grass_sand_e'
+              end
+            end
+          end
+
+          if neighboring_cells["east"] == 'grass' || neighboring_cells["east"] == 'seed_grass' || neighboring_cells["east"] == 'mountain'
+            if neighboring_cells["north"] == 'dirt'  || neighboring_cells["north"] == 'grass_sand_sw' || neighboring_cells["north"] == 'grass_sand_w'
+              if neighboring_cells["south"] == 'dirt' || neighboring_cells["south"] == 'grass_sand_nw' || neighboring_cells["south"] == 'grass_sand_w'
+                cells[row_index][cell_index] = 'grass_sand_w'
+              end
+            end
+          end
+
+          if neighboring_cells["north"] == 'grass' || neighboring_cells ["north"] == 'mountain'
+            if neighboring_cells["east"] == 'grass' || neighboring_cells ["east"] == 'mountain'
+              cells[row_index][cell_index] = 'grass_sand_sw'
+            end
+          end
+
+          if neighboring_cells["south"] == 'grass' || neighboring_cells ["south"] == 'mountain'
+            if neighboring_cells["east"] == 'grass' || neighboring_cells ["east"] == 'mountain'
+              cells[row_index][cell_index] = 'grass_sand_nw'
+            end
+          end
+
+          if neighboring_cells["south"] == 'grass' || neighboring_cells ["south"] == 'mountain'
+              if neighboring_cells["west"] == 'grass' || neighboring_cells ["west"] == 'mountain'
+                cells[row_index][cell_index] = 'grass_sand_ne'
+              end
+          end
+
+          if neighboring_cells["north"] == 'grass' || neighboring_cells ["north"] == 'mountain'
+              if neighboring_cells["west"] == 'grass' || neighboring_cells ["west"] == 'mountain'
+                cells[row_index][cell_index] = 'grass_sand_se'
+              end
+          end
+
+        end
+      end
+    end
+
+    ####### Mountain Smoothing
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["west"] == 'grass'
+            if neighboring_cells["north"] != 'grass'
+              if neighboring_cells["south"] != 'grass'
+                cells[row_index][cell_index] = 'mountain_grass_w'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["east"] == 'grass'
+            if neighboring_cells["north"] != 'grass'
+              if neighboring_cells["south"] != 'grass'
+                cells[row_index][cell_index] = 'mountain_grass_e'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["north"] == 'grass'
+            if neighboring_cells["west"] != 'grass'
+              if neighboring_cells["east"] != 'grass'
+                cells[row_index][cell_index] = 'mountain_grass_n'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["south"] == 'grass'
+            if neighboring_cells["east"] != 'grass'
+              if neighboring_cells["west"] != 'grass'
+                cells[row_index][cell_index] = 'mountain_grass_s'
+              end
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["west"] == 'grass'
+            if neighboring_cells["north"] == 'grass'
+              cells[row_index][cell_index] = 'mountain_grass_nw'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["west"] == 'grass'
+            if neighboring_cells["south"] == 'grass'
+              cells[row_index][cell_index] = 'mountain_grass_sw'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["east"] == 'grass'
+            if neighboring_cells["north"] == 'grass'
+              cells[row_index][cell_index] = 'mountain_grass_ne'
+            end
+          end
+        end
+
+        if cells[row_index][cell_index] == 'mountain'
+          if neighboring_cells["east"] == 'grass'
+            if neighboring_cells["south"] == 'grass'
+              cells[row_index][cell_index] = 'mountain_grass_se'
+            end
+          end
+        end
+      end
+    end
+
+    #### Arctic Zones ####
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if row_index >= (rows - rows/10) || row_index <= (0 + rows/10)
+          if cells[row_index][cell_index] == 'mountain_grass_n'
+            cells[row_index][cell_index] = 'mountain_snow_n'
+          end
+
+          if cells[row_index][cell_index] == 'mountain_grass_ne'
+            cells[row_index][cell_index] = 'mountain_snow_ne'
+          end
+          if cells[row_index][cell_index] == 'mountain_grass_nw'
+            cells[row_index][cell_index] = 'mountain_snow_nw'
+          end
+
+          if cells[row_index][cell_index] == 'mountain_grass_e'
+            cells[row_index][cell_index] = 'mountain_snow_e'
+          end
+
+          if cells[row_index][cell_index] == 'mountain_grass_se'
+            cells[row_index][cell_index] = 'mountain_snow_se'
+          end
+
+          if cells[row_index][cell_index] == 'mountain_grass_s'
+            cells[row_index][cell_index] = 'mountain_snow_s'
+          end
+
+          if cells[row_index][cell_index] == 'mountain_grass_sw'
+            cells[row_index][cell_index] = 'mountain_snow_sw'
+          end
+
+          if cells[row_index][cell_index] == 'mountain_grass_w'
+            cells[row_index][cell_index] = 'mountain_snow_w'
+          end
+        end
+
+        if row_index < (0 + rows/10) || row_index > (rows - rows/10)
+          if cells[row_index][cell_index] == 'grass' || cells[row_index][cell_index] == 'dirt'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'sand_shallow_e'
+            cells[row_index][cell_index] = 'snow_water_e'
+          elsif cells[row_index][cell_index] == 'sand_shallow_w'
+            cells[row_index][cell_index] = 'snow_water_w'
+          elsif cells[row_index][cell_index] == 'sand_shallow_s'
+            cells[row_index][cell_index] = 'snow_water_s'
+          elsif cells[row_index][cell_index] == 'sand_shallow_n'
+            cells[row_index][cell_index] = 'snow_water_n'
+          elsif cells[row_index][cell_index] == 'sand_shallow_ne'
+            cells[row_index][cell_index] = 'snow_water_ne'
+          elsif cells[row_index][cell_index] == 'sand_shallow_nw'
+            cells[row_index][cell_index] = 'snow_water_nw'
+          elsif cells[row_index][cell_index] == 'sand_shallow_se'
+            cells[row_index][cell_index] = 'snow_water_se'
+          elsif cells[row_index][cell_index] == 'sand_shallow_sw'
+            cells[row_index][cell_index] = 'snow_water_sw'
+          elsif cells[row_index][cell_index] == 'grass_sand_n'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_s'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_e'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_w'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_ne'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_nw'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_se'
+            cells[row_index][cell_index] = 'snow'
+          elsif cells[row_index][cell_index] == 'grass_sand_sw'
+            cells[row_index][cell_index] = 'snow'
+          end
+        end
+
+      end
+    end
+
+    #### Tundra Zones #####
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
+
+        if neighboring_cells.count{|x| x[1] == 'tundra'} > 7
+          cells[row_index][cell_index] = 'tundra'
+        end
+
+        if neighboring_cells.count{|x| x[1] == 'grass'} > 7
+          cells[row_index][cell_index] = 'grass'
+        end
+
+        if row_index < (0 + rows/5) || row_index > (rows - rows/5)
+          if cells[row_index][cell_index] == 'grass_sand_e'
+            cells[row_index][cell_index] = 'tundra_sand_e'
+          elsif cells[row_index][cell_index] == 'grass_sand_w'
+            cells[row_index][cell_index] = 'tundra_sand_w'
+          elsif cells[row_index][cell_index] == 'grass_sand_n'
+            cells[row_index][cell_index] = 'tundra_sand_n'
+          elsif cells[row_index][cell_index] == 'grass_sand_s'
+            cells[row_index][cell_index] = 'tundra_sand_s'
+          elsif cells[row_index][cell_index] == 'grass_sand_nw'
+            cells[row_index][cell_index] = 'tundra_sand_nw'
+          elsif cells[row_index][cell_index] == 'grass_sand_sw'
+            cells[row_index][cell_index] = 'tundra_sand_sw'
+          elsif cells[row_index][cell_index] == 'grass_sand_ne'
+            cells[row_index][cell_index] = 'tundra_sand_ne'
+          elsif cells[row_index][cell_index] == 'grass_sand_se'
+            cells[row_index][cell_index] = 'tundra_sand_se'
+          elsif cells[row_index][cell_index] == 'grass'
+            cells[row_index][cell_index] = 'tundra'
+          end
+        end
+
+        if row_index <= (0 + rows/5) || row_index >= (rows - rows/5)
+          if cells[row_index][cell_index] == 'mountain_grass_n'
+            cells[row_index][cell_index] = 'mountain_tundra_n'
+          elsif cells[row_index][cell_index] == 'mountain_grass_ne'
+            cells[row_index][cell_index] = 'mountain_tundra_ne'
+          elsif cells[row_index][cell_index] == 'mountain_grass_nw'
+            cells[row_index][cell_index] = 'mountain_tundra_nw'
+          elsif cells[row_index][cell_index] == 'mountain_grass_e'
+            cells[row_index][cell_index] = 'mountain_tundra_e'
+          elsif cells[row_index][cell_index] == 'mountain_grass_se'
+            cells[row_index][cell_index] = 'mountain_tundra_se'
+          elsif cells[row_index][cell_index] == 'mountain_grass_s'
+            cells[row_index][cell_index] = 'mountain_tundra_s'
+          elsif cells[row_index][cell_index] == 'mountain_grass_sw'
+            cells[row_index][cell_index] = 'mountain_tundra_sw'
+          elsif cells[row_index][cell_index] == 'mountain_grass_w'
+            cells[row_index][cell_index] = 'mountain_tundra_w'
+          end
+        end
+
+      end
+    end
+
+    ###### Blend North Arctic with Tundra
+    ###### Blend South Arctic with Tundra
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        neighboring_cells = neighbors(cells, row_index, cell_index)
 
 
 
+        if row_index == (0 + rows/10)
+          if cells[row_index][cell_index] == 'tundra'
+            cells[row_index][cell_index] = 'tundra_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_w'
+            cells[row_index][cell_index] = 'sand_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_ne'
+            cells[row_index][cell_index] = 'sand_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_e'
+            cells[row_index][cell_index] = 'sand_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_se'
+            cells[row_index][cell_index] = 'tundra_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_sw'
+            cells[row_index][cell_index] = 'sand_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_nw'
+            cells[row_index][cell_index] = 'tundra_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_n'
+            cells[row_index][cell_index] = 'tundra_snow_n'
+          elsif cells[row_index][cell_index] == 'sand_shallow_w'
+            cells[row_index][cell_index] = 'sand_shallow_w_snow_ne'
+          elsif cells[row_index][cell_index] == 'sand_shallow_e'
+            cells[row_index][cell_index] = 'sand_shallow_w_snow_nw'
+          elsif cells[row_index][cell_index] == 'sand_shallow_nw'
+            cells[row_index][cell_index] = 'snow_shallow_nw_sand_s'
+          elsif cells[row_index][cell_index] == 'sand_shallow_ne'
+            cells[row_index][cell_index] = 'snow_shallow_ne_sand_s'
+          elsif cells[row_index][cell_index] == 'sand_shallow_n'
+            cells[row_index][cell_index] = 'snow_shallow_n_sand_s'
+          elsif cells[row_index][cell_index] == 'dirt'
+            cells[row_index][cell_index] = 'sand_snow_n'
+          elsif cells[row_index][cell_index] == 'tundra_sand_s'
+            cells[row_index][cell_index] = 'sand_snow_n'
+          elsif cells[row_index][cell_index] == 'sand_shallow_se'
+            cells[row_index][cell_index] = 'snow_shallow_se'
+          elsif cells[row_index][cell_index] == 'sand_shallow_sw'
+            cells[row_index][cell_index] = 'snow_shallow_sw'
+          end
+        end
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+        if row_index == (rows - rows/10)
+          if cells[row_index][cell_index] == 'tundra'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_n'
+            cells[row_index][cell_index] = 'sand_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_w'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_ne'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_e'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_se'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_sw'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_nw'
+            cells[row_index][cell_index] = 'sand_snow_s'
+          elsif cells[row_index][cell_index] == 'tundra_sand_s'
+            cells[row_index][cell_index] = 'tundra_snow_s'
+          elsif cells[row_index][cell_index] == 'sand_shallow_e'
+            cells[row_index][cell_index] = 'sand_shallow_e_snow_sw'
+          elsif cells[row_index][cell_index] == 'sand_shallow_w'
+            cells[row_index][cell_index] = 'sand_shallow_w_snow_se'
+          elsif cells[row_index][cell_index] == 'sand_shallow_n'
+            cells[row_index][cell_index] = 'snow_water_n'
+          elsif cells[row_index][cell_index] == 'sand_shallow_ne'
+            cells[row_index][cell_index] = 'snow_water_ne'
+          elsif cells[row_index][cell_index] == 'sand_shallow_nw'
+            cells[row_index][cell_index] = 'snow_water_nw'
+          elsif cells[row_index][cell_index] == 'sand_shallow_sw'
+            cells[row_index][cell_index] = 'snow_shallow_sw_sand_n'
+          elsif cells[row_index][cell_index] == 'dirt'
+            cells[row_index][cell_index] = 'sand_snow_s'
+          elsif cells[row_index][cell_index] == 'sand_shallow_s'
+            cells[row_index][cell_index] = 'snow_shallow_s_sand_n'
+          end
+        end
+      end
+    end
 
     cells
-
   end
-
-  def save(name, max_rows, max_cols, id)
-    cells_array = cells
-    world = World.create(name: name, max_rows: max_rows, max_columns: max_cols, cells: cells_array, id: id)
-  end
-
-
-
-
 end
+
+
+
+
+
+
+
+
+
+
+
+

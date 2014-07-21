@@ -84,8 +84,8 @@ $(document).ready(function() {
           var imageX = 0
           var imageY = 150
         } else if (cells[row][column] == "mountain") {
-          var imageX = 96
-          var imageY = 0
+          var imageX = 32
+          var imageY = 224
         } else if (cells[row][column] == "frozen_water_1") {
           var imageX = 0
           var imageY = 32
@@ -254,6 +254,172 @@ $(document).ready(function() {
         } else if (cells[row][column] == "grass_sand_middle") {
           var imageX = 96
           var imageY = 32
+
+        } else if (cells[row][column] == "mountain_grass_w") {
+          var imageX = 0
+          var imageY = 224
+        } else if (cells[row][column] == "mountain_grass_nw") {
+          var imageX = 0
+          var imageY = 192
+        } else if (cells[row][column] == "mountain_grass_sw") {
+          var imageX = 0
+          var imageY = 256
+        } else if (cells[row][column] == "mountain_grass_n") {
+          var imageX = 32
+          var imageY = 192
+        } else if (cells[row][column] == "mountain_grass_ne") {
+          var imageX = 64
+          var imageY = 192
+        } else if (cells[row][column] == "mountain_grass_e") {
+          var imageX = 64
+          var imageY = 224
+        } else if (cells[row][column] == "mountain_grass_se") {
+          var imageX = 64
+          var imageY = 256
+        } else if (cells[row][column] == "mountain_grass_s") {
+          var imageX = 32
+          var imageY = 256
+
+        } else if (cells[row][column] == "mountain_snow_w") {
+          var imageX = 0
+          var imageY = 320
+        } else if (cells[row][column] == "mountain_snow_nw") {
+          var imageX = 0
+          var imageY = 288
+        } else if (cells[row][column] == "mountain_snow_sw") {
+          var imageX = 0
+          var imageY = 352
+        } else if (cells[row][column] == "mountain_snow_n") {
+          var imageX = 32
+          var imageY = 288
+        } else if (cells[row][column] == "mountain_snow_s") {
+          var imageX = 32
+          var imageY = 352
+        } else if (cells[row][column] == "mountain_snow_se") {
+          var imageX = 64
+          var imageY = 352
+        } else if (cells[row][column] == "mountain_snow_e") {
+          var imageX = 64
+          var imageY = 320
+        } else if (cells[row][column] == "mountain_snow_ne") {
+          var imageX = 64
+          var imageY = 288
+
+
+
+
+
+        } else if (cells[row][column] == "mountain_grass_ne") {
+          var imageX = 64
+          var imageY = 288
+        } else if (cells[row][column] == "mountain_grass_e") {
+          var imageX = 64
+          var imageY = 320
+        } else if (cells[row][column] == "mountain_grass_se") {
+          var imageX = 64
+          var imageY = 352
+        } else if (cells[row][column] == "mountain_grass_s") {
+          var imageX = 32
+          var imageY = 352
+
+        } else if (cells[row][column] == "mountain_tundra_w") {
+          var imageX = 96
+          var imageY = 320
+        } else if (cells[row][column] == "mountain_tundra_nw") {
+          var imageX = 96
+          var imageY = 288
+        } else if (cells[row][column] == "mountain_tundra_sw") {
+          var imageX = 96
+          var imageY = 352
+        } else if (cells[row][column] == "mountain_tundra_n") {
+          var imageX = 128
+          var imageY = 288
+        } else if (cells[row][column] == "mountain_tundra_ne") {
+          var imageX = 160
+          var imageY = 288
+        } else if (cells[row][column] == "mountain_tundra_e") {
+          var imageX = 160
+          var imageY = 320
+        } else if (cells[row][column] == "mountain_tundra_se") {
+          var imageX = 160
+          var imageY = 352
+        } else if (cells[row][column] == "mountain_tundra_s") {
+          var imageX = 128
+          var imageY = 352
+
+
+
+        } else if (cells[row][column] == "sand_snow_s") {
+          var imageX = 320
+          var imageY = 256
+        } else if (cells[row][column] == "sand_snow_n") {
+          var imageX = 320
+          var imageY = 192
+        } else if (cells[row][column] == 'sand_shallow_w_snow_ne') {
+          var imageX = 288
+          var imageY = 224
+        } else if (cells[row][column] == 'sand_shallow_w_snow_nw') {
+          var imageX = 320
+          var imageY = 224
+        } else if (cells[row][column] == 'sand_shallow_w_snow_se') {
+          var imageX = 416
+          var imageY = 192
+        } else if (cells[row][column] == 'sand_shallow_e_snow_sw') {
+          var imageX = 384
+          var imageY = 192
+
+
+
+        } else if (cells[row][column] == 'snow_shallow_nw_sand_s') {
+          var imageX = 384
+          var imageY = 256
+        } else if (cells[row][column] == 'snow_shallow_ne_sand_s') {
+          var imageX = 416
+          var imageY = 224
+        } else if (cells[row][column] == 'snow_shallow_sw_sand_n') {
+          var imageX = 416
+          var imageY = 256
+        } else if (cells[row][column] == 'snow_shallow_n_sand_s') {
+          var imageX = 384
+          var imageY = 224
+        } else if (cells[row][column] == 'snow_shallow_s_sand_n') {
+          var imageX = 448
+          var imageY = 192
+
+        } else if (cells[row][column] == "tundra") {
+          var imageX = 128
+          var imageY = 32
+        } else if (cells[row][column] == "tundra_sand_se") {
+          var imageX = 96
+          var imageY = 192
+        } else if (cells[row][column] == "tundra_sand_s") {
+          var imageX = 128
+          var imageY = 192
+        } else if (cells[row][column] == "tundra_sand_sw") {
+          var imageX = 160
+          var imageY = 192
+        } else if (cells[row][column] == "tundra_sand_ne") {
+          var imageX = 96
+          var imageY = 256
+        } else if (cells[row][column] == "tundra_sand_n") {
+          var imageX = 128
+          var imageY = 256
+        } else if (cells[row][column] == "tundra_sand_nw") {
+          var imageX = 160
+          var imageY = 256
+        } else if (cells[row][column] == "tundra_sand_e") {
+          var imageX = 96
+          var imageY = 224
+        } else if (cells[row][column] == "tundra_sand_w") {
+          var imageX = 160
+          var imageY = 224
+
+        } else if (cells[row][column] == "tundra_snow_n") {
+          var imageX = 224
+          var imageY = 256
+        } else if (cells[row][column] == "tundra_snow_s") {
+          var imageX = 224
+          var imageY = 192
 
         } else if (cells[row][column] == "seed_grass") {
           var imageX = 64

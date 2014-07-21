@@ -3,11 +3,11 @@
 }
 
 .grass {
-background-color: limegreen;
+background-color: ForestGreen;
 }
 
 .mountain {
-background-color: slategray;
+background-color: DarkSlateGray;
 }
 
 
@@ -16,11 +16,11 @@ background-color: seashell;
 }
 
 .water {
-background-color: royalblue;
+background-color: MidnightBlue;
 }
 
 .dirt {
-background-color: burlywood;
+background-color: GoldenRod;
 }
 
 .ice {
@@ -32,7 +32,210 @@ background-color: burlywood;
 }
 
 .shallow_water {
-  background-color: skyblue;
+  background-color: LightSkyBlue;
+}
+
+.snow_water_w {
+  background-color: LightSkyBlue;
+}
+.snow_water_e {
+  background-color: LightSkyBlue;
+}
+.snow_water_n {
+  background-color: LightSkyBlue;
+}
+.snow_water_s {
+  background-color: LightSkyBlue;
+}
+.snow_water_nw {
+   background-color: LightSkyBlue;
+}
+.snow_water_ne {
+  background-color: LightSkyBlue;
+}
+.snow_water_sw {
+  background-color: LightSkyBlue;
+}
+.snow_water_se {
+    background-color: LightSkyBlue;
+}
+.water_shallow_w {
+  background-color: LightSkyBlue;
+}
+.water_shallow_e {
+  background-color: LightSkyBlue;
+}
+.water_shallow_n {
+  background-color: LightSkyBlue;
+}
+.water_shallow_s {
+  background-color: LightSkyBlue;
+}
+.water_shallow_nw {
+  background-color: LightSkyBlue;
+}
+.water_shallow_sw {
+  background-color: LightSkyBlue;
+}
+.water_shallow_se {
+  background-color: LightSkyBlue;
+}
+.water_shallow_ne {
+  background-color: LightSkyBlue;
+}
+.sand_shallow_w {
+  background-color: GoldenRod;
+}
+.sand_shallow_n {
+  background-color: GoldenRod;
+}
+.sand_shallow_s {
+  background-color: GoldenRod;
+}
+.sand_shallow_e {
+  background-color: GoldenRod;
+}
+.sand_shallow_w {
+  background-color: GoldenRod;
+}
+.sand_shallow_nw {
+  background-color: GoldenRod;
+}
+.sand_shallow_sw {
+  background-color: GoldenRod;
+}
+.sand_shallow_se {
+  background-color: GoldenRod;
+}
+.sand_shallow_ne {
+  background-color: GoldenRod;
+}
+.grass_sand_w {
+  background-color: LawnGreen;
+}
+.grass_sand_s {
+  background-color: LawnGreen;
+}
+.grass_sand_e {
+  background-color: LawnGreen;
+}
+.grass_sand_n {
+  background-color: LawnGreen;
+}
+.grass_sand_ne {
+  background-color: LawnGreen;
+}
+.grass_sand_nw {
+  background-color: LawnGreen;
+}
+.grass_sand_se {
+  background-color: LawnGreen;
+}
+.grass_sand_sw {
+  background-color: LawnGreen;
+}
+
+.mountain_grass_w {
+  background-color: ForestGreen;
+}
+.mountain_grass_s {
+  background-color: ForestGreen;
+}
+.mountain_grass_e {
+  background-color: ForestGreen;
+}
+.mountain_grass_n {
+  background-color: ForestGreen;
+}
+.mountain_grass_nw {
+  background-color: ForestGreen;
+}
+.mountain_grass_sw {
+  background-color: ForestGreen;
+}
+.mountain_grass_ne {
+  background-color: ForestGreen;
+}
+.mountain_grass_se {
+  background-color: ForestGreen;
+}
+
+.mountain_snow_n {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_s {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_w {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_e {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_nw {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_ne {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_sw {
+  background-color: DarkSlateGray;
+}
+.mountain_snow_se {
+  background-color: DarkSlateGray;
+}
+
+.mountain_tundra_n {
+  background-color: LightGray;
+}
+.mountain_tundra_s {
+  background-color: LightGray;
+}
+.mountain_tundra_e {
+  background-color: LightGray;
+}
+.mountain_tundra_w {
+  background-color: LightGray;
+}
+.mountain_tundra_nw {
+  background-color: LightGray;
+}
+.mountain_tundra_sw {
+  background-color: LightGray;
+}
+.mountain_tundra_ne {
+  background-color: LightGray;
+}
+.mountain_tundra_se {
+  background-color: LightGray;
+}
+
+.tundra {
+  background-color: LightGray;
+}
+.tundra_sand_s {
+  background-color: LightGray;
+}
+.tundra_sand_n {
+  background-color: LightGray;
+}
+.tundra_sand_e {
+  background-color: LightGray;
+}
+.tundra_sand_w {
+  background-color: LightGray;
+}
+.tundra_sand_ne {
+  background-color: LightGray;
+}
+.tundra_sand_se {
+  background-color: LightGray;
+}
+.tundra_sand_nw {
+  background-color: LightGray;
+}
+.tundra_sand_sw {
+  background-color: LightGray;
 }
 
 #canvas {
