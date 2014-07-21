@@ -1,5 +1,8 @@
-<h1>Enter New World Criteria</h1>
 
+
+
+
+<h1>Enter New World Criteria</h1>
 
 <%= form_for @world do |f| %>
   <% if @world.errors.any? %>
@@ -14,6 +17,8 @@
     <%= f.label :name %>
     <%= f.text_field :name %>
   </div>
+
+  </br>
 
   <div>
     <%= f.label :max_rows %>

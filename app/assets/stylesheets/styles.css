@@ -1,3 +1,11 @@
+#logo a:link {
+  text-decoration: none;
+}
+
+
+
+
+
 .tree {
 
 }
@@ -16,7 +24,7 @@ background-color: seashell;
 }
 
 .water {
-background-color: MidnightBlue;
+background-color: DodgerBlue;
 }
 
 .dirt {
