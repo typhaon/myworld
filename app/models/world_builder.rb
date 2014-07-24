@@ -115,6 +115,20 @@ class WorldBuilder
     far_away_cells
   end
 
+  def really_far_away(cell, row, col)
+    really_far_away_cells = Hash.new
+    max_col = @columns
+    max_row = @rows
+
+    if row < max_row - 6 && col < max_col - 7
+      really_far_away_cells['south_west_corner'] = cells[row + 4][col]
+      really_far_away_cells['north_east_corner'] = cells[row][col + 5]
+      really_far_away_cells['south_east_corner'] = cells[row + 4][col + 5]
+      really_far_away_cells['origin'] = cells[row][col]
+    end
+    really_far_away_cells
+  end
+
   def save(name, max_rows, max_cols, id)
     cells_array = cells
     world = World.create(name: name, max_rows: max_rows, max_columns: max_cols, cells: cells_array, id: id)
@@ -953,6 +967,189 @@ class WorldBuilder
             cells[row_index][cell_index] = 'snow_shallow_s_sand_n'
           end
         end
+      end
+    end
+
+    ##### Beach Trees and various Terrain Objects
+
+    cells.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        far_away_cells = far_away(cells, row_index, cell_index)
+        really_far_away_cells = really_far_away(cells, row_index, cell_index)
+
+        if cells[row_index][cell_index] == 'grass'
+          if far_away_cells.count{|x| x[1] == 'grass'} == 4
+            tile = rand(2000)
+            if tile == 0
+              cells[row_index][cell_index] = 'house_1'
+              cells[row_index][cell_index + 1] = 'house_2'
+              cells[row_index][cell_index + 2] = 'house_3'
+              cells[row_index][cell_index + 3] = 'house_4'
+              cells[row_index + 1][cell_index] = 'house_5'
+              cells[row_index + 1][cell_index + 1] = 'house_6'
+              cells[row_index + 1][cell_index + 2] = 'house_7'
+              cells[row_index + 1][cell_index + 3] = 'house_8'
+              cells[row_index + 2][cell_index] = 'house_9'
+              cells[row_index + 2][cell_index + 1] = 'house_10'
+              cells[row_index + 2][cell_index + 2] = 'house_11'
+              cells[row_index + 2][cell_index + 3] = 'house_12'
+              cells[row_index + 3][cell_index] = 'house_13'
+              cells[row_index + 3][cell_index + 1] = 'house_14'
+              cells[row_index + 3][cell_index + 2] = 'house_15'
+              cells[row_index + 3][cell_index + 3] = 'house_16'
+            end
+
+            if tile == 1
+              cells[row_index][cell_index + 1] = 'ruin_1'
+              cells[row_index][cell_index + 2] = 'ruin_2'
+              cells[row_index + 1][cell_index + 1] = 'ruin_3'
+              cells[row_index + 1][cell_index + 2] = 'ruin_4'
+            end
+          end
+
+          if really_far_away_cells.count{|x| x[1] == 'grass'} == 4
+            tile = rand(2000)
+            if tile == 0
+              cells[row_index][cell_index] = 'castle_1'
+              cells[row_index][cell_index + 1] = 'castle_2'
+              cells[row_index][cell_index + 2] = 'castle_3'
+              cells[row_index][cell_index + 3] = 'castle_4'
+              cells[row_index][cell_index + 4] = 'castle_5'
+              cells[row_index][cell_index + 5] = 'castle_6'
+              cells[row_index + 1][cell_index] = 'castle_7'
+              cells[row_index + 1][cell_index + 1] = 'castle_8'
+              cells[row_index + 1][cell_index + 2] = 'castle_9'
+              cells[row_index + 1][cell_index + 3] = 'castle_10'
+              cells[row_index + 1][cell_index + 4] = 'castle_11'
+              cells[row_index + 1][cell_index + 5] = 'castle_12'
+              cells[row_index + 2][cell_index] = 'castle_13'
+              cells[row_index + 2][cell_index + 1] = 'castle_14'
+              cells[row_index + 2][cell_index + 2] = 'castle_15'
+              cells[row_index + 2][cell_index + 3] = 'castle_16'
+              cells[row_index + 2][cell_index + 4] = 'castle_17'
+              cells[row_index + 2][cell_index + 5] = 'castle_18'
+              cells[row_index + 3][cell_index] = 'castle_19'
+              cells[row_index + 3][cell_index + 1] = 'castle_20'
+              cells[row_index + 3][cell_index + 2] = 'castle_21'
+              cells[row_index + 3][cell_index + 3] = 'castle_22'
+              cells[row_index + 3][cell_index + 4] = 'castle_23'
+              cells[row_index + 3][cell_index + 5] = 'castle_24'
+              cells[row_index + 4][cell_index] = 'castle_25'
+              cells[row_index + 4][cell_index + 1] = 'castle_26'
+              cells[row_index + 4][cell_index + 2] = 'castle_27'
+              cells[row_index + 4][cell_index + 3] = 'castle_28'
+              cells[row_index + 4][cell_index + 4] = 'castle_29'
+              cells[row_index + 4][cell_index + 5] = 'castle_30'
+            end
+          end
+
+          tile = rand(10)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_tree_1'
+          elsif tile == 1
+            cells[row_index][cell_index] = 'grass_tree_2'
+          elsif tile == 2
+            cells[row_index][cell_index] = 'grass_tree_3'
+          elsif tile == 3
+            cells[row_index][cell_index] = 'grass_tree_4'
+          elsif tile == 4
+            cells[row_index][cell_index] = 'grass_tree_5'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'tundra'
+          tile = rand(10)
+          if tile == 1
+            cells[row_index][cell_index] = 'tundra_1'
+          elsif tile == 2
+            cells[row_index][cell_index] = 'tundra_2'
+          elsif tile == 3
+            cells[row_index][cell_index] = 'tundra_3'
+          elsif tile == 4
+            cells[row_index][cell_index] = 'tundra_4'
+          elsif tile == 5
+            cells[row_index][cell_index] = 'tundra_5'
+          end
+        end
+
+            if cells[row_index][cell_index] == 'dirt'
+          tile = rand(3)
+          if tile == 0
+            cells[row_index][cell_index] = 'dirt_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'sand_shallow_nw'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'sand_shallow_nw_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'sand_shallow_ne'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'sand_shallow_ne_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'sand_shallow_w'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'sand_shallow_w_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_e'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_e_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_n'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_n_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_s'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_s_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_se'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_se_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_ne'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_ne_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_nw'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_nw_0'
+          end
+        end
+
+        if cells[row_index][cell_index] == 'grass_sand_sw'
+          tile = rand(4)
+          if tile == 0
+            cells[row_index][cell_index] = 'grass_sand_sw_0'
+          end
+        end
+
+
       end
     end
 

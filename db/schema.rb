@@ -32,10 +32,10 @@ ActiveRecord::Schema.define(version: 20140707151555) do
   end
 
   create_table "worlds", force: true do |t|
-    t.string   "name",        null: false
-    t.integer  "max_rows",    null: false
-    t.integer  "max_columns", null: false
-    t.string   "cells",                    array: true
+    t.string   "name",                        null: false
+    t.integer  "max_rows",                    null: false
+    t.integer  "max_columns",                 null: false
+    t.string   "cells",       default: ["0"],              array: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
